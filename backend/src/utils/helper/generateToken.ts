@@ -1,9 +1,13 @@
 import jwt from 'jsonwebtoken';
 import { Response } from 'express';
+import { PayloadProps } from '../../types/auth';
 
 function generateToken(userId: number, role: string, res: Response) {
   const MY_SECRET_KEY = process.env.MY_SECRET_KEY;
-  const token = jwt.sign({ userId, role }, MY_SECRET_KEY!, {
+
+  const payload: PayloadProps = { userId, role }
+
+  const token = jwt.sign(payload, MY_SECRET_KEY!, {
     expiresIn: "7d",
   })
 
