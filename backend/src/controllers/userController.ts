@@ -4,10 +4,12 @@ import { db } from "../db/index";
 import { eq } from "drizzle-orm";
 import hashPassword from "../utils/helper/hashPassword";
 import validatePassword from "../utils/helper/validatePassword";
+import generateToken from "../utils/helper/generateToken";
 
 export function getUser(req: Request, res: Response): any {
   return res.status(200).json({ success: true, message: "Success." })
 }
+
 
 export async function signupUser(req: Request, res: Response): Promise<any> {
   const { name, email, password } = req.body
@@ -22,7 +24,7 @@ export async function signupUser(req: Request, res: Response): Promise<any> {
       return res.status(400).json({ success: false, message: "Email already exist." })
     }
 
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword: string = await hashPassword(password);
 
     const newUser = await db.insert(users).values({ name, email, password: hashedPassword }).returning();
 
@@ -35,6 +37,7 @@ export async function signupUser(req: Request, res: Response): Promise<any> {
     return res.status(400).json({ success: false, error })
   }
 }
+
 
 export async function loginUser(req: Request, res: Response): Promise<any> {
   const { email, password } = req.body
@@ -52,14 +55,22 @@ export async function loginUser(req: Request, res: Response): Promise<any> {
     const fetchedUser = isUserExist[0];
 
     const isPasswordValid = await validatePassword(password, fetchedUser.password);
-    console.log("isPasswordValid: ", isPasswordValid);
 
     if (!isPasswordValid) {
       return res.status(400).json({ success: false, message: "Password is incorrect." })
     }
 
+    generateToken(fetchedUser.id, fetchedUser.role!, res)
+
     return res.status(201).json({ success: true, message: "Login successfully." })
   } catch (error) {
     return res.status(400).json({ success: false, error })
   }
+}
+
+
+export async function logoutUser(req: Request, res: Response): Promise<any> {
+  console.log("Inside of logout function")
+  res.clearCookie("token");
+  return res.status(200).json({ success: true, message: "Logout successfully." })
 }
