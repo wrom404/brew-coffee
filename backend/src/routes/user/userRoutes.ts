@@ -4,7 +4,7 @@ import authMiddleware from "../../middleware/auth/authMiddleware";
 
 const routes = express.Router();
 
-routes.get('/user', authMiddleware, getUser)
+routes.get('/', authMiddleware, getUser)
 
 export default routes;
 
