@@ -1,6 +1,6 @@
 import express from "express";
 import authMiddleware from "../../middleware/auth/authMiddleware";
-import { createProduct, getAllProducts } from "../../controller/admin/productController";
+import { createProduct, getAllProducts, getProductById } from "../../controller/admin/productController";
 import authorizeRole from "../../middleware/auth/authorizeRole";
 import { upload } from "../../middleware/upload/uploadMiddleware";
 
@@ -13,5 +13,7 @@ routes.use(authorizeRole)
 routes.get('/', getAllProducts)
 
 routes.post('/create-product', upload.single('photo'), createProduct)
+
+routes.get('/:productId', getProductById)
 
 export default routes;
