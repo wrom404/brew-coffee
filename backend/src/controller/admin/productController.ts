@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import path from "path";
+import fs from 'fs/promises'
 import { products } from "../../db/schema";
 import { db } from "../../db/index";
 
@@ -25,6 +27,38 @@ export async function createProduct(req: Request, res: Response): Promise<void> 
     console.error("Error creating product:", error);
     res.status(500).json({ success: false, message: "Internal server error.", error });
     return;
+  }
+}
+
+export async function getAllProducts(req: Request, res: Response): Promise<void> {
+  // try {
+  //   const uploadDir = path.join(__dirname, "../../uploads/products"); // Correct path
+
+  //   const files = await fs.readdir(uploadDir); // Use promises
+
+  //   const filesUrls = files.map(
+  //     (file) => `http://localhost:4000/uploads/products/${file}`
+  //   );
+
+  //   res.status(200).json({ success: true, filesUrls });
+  //   return;
+  // } catch (error) {
+  //   console.log("error: ", error)
+  //   res.status(500).json({ success: false, message: "Internal server error", error })
+  //   return;
+  // }
+  try {
+    const queryProducts = await db.select().from(products);
+
+    if (queryProducts.length === 0) {
+      res.status(400).json({ success: false, message: "No products found" })
+      return;
+    }
+
+    res.status(200).json({ success: true, products: queryProducts })
+    return;
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error", error })
   }
 }
 
