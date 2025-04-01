@@ -33,7 +33,7 @@ export async function signupUser(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    res.status(201).json({ success: true, user: newUser[0].password = '', message: "User created successfully" })
+    res.status(201).json({ success: true, newUser, message: "User created successfully" })
     return;
   } catch (error) {
     res.status(400).json({ success: false, error })
@@ -59,6 +59,8 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
 
     const fetchedUser = isUserExist[0];
 
+    console.log("fetchedUser: ", fetchedUser)
+
     const isPasswordValid = await validatePassword(password, fetchedUser.password);
 
     if (!isPasswordValid) {
@@ -66,7 +68,7 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    generateToken(fetchedUser.id, fetchedUser.role!, res)
+    generateToken(fetchedUser.id, fetchedUser.role as string, res)
 
     res.status(201).json({ success: true, message: "Login successfully." })
     return;

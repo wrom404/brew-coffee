@@ -3,17 +3,17 @@ import { Response } from 'express';
 import { PayloadProps } from '../../types/jwt';
 
 function generateToken(userId: number, role: string, res: Response) {
-  const MY_SECRET_KEY = process.env.MY_SECRET_KEY;
+  const JWT_SECRET = process.env.JWT_SECRET;
 
   const payload: PayloadProps = { userId, role }
 
-  const token = jwt.sign(payload, MY_SECRET_KEY as string, {
-    expiresIn: "7d",
+  const token = jwt.sign(payload, JWT_SECRET as string, {
+    expiresIn: "1h",
   })
 
   res.cookie("token", token, {
     httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 3600000, // 1 hour
     sameSite: "strict",
   });
 

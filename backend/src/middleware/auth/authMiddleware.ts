@@ -4,28 +4,26 @@ import { PayloadProps } from "../../types/jwt";
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction): Promise<void> {
   const token = req.header("Authorization")?.split(" ")[1];
-
   console.log("header: ", req.header("Authorization")?.split(" "))
 
-  const MY_SECRET_KEY = process.env.MY_SECRET_KEY;
+  const JWT_SECRET = process.env.JWT_SECRET;
 
   if (!token) {
     res.status(400).json({ success: false, message: "Unauthorized user." });
     return;
   }
-  
-  try {
-    // jwt.verify(token, MY_SECRET_KEY!) returns a decoded token.
-    // if decoded is successful, it typically returns the payload of the JWT. However, the TypeScript type definition for jwt.verify() might not be specific about the exact structure of this payload. It might a more general type like object or any.
-    const decoded = jwt.verify(token, MY_SECRET_KEY as string) as PayloadProps;
 
-    //test this if what's inside of this decoded or what is the decoded token that returns in jwt.verify
-    console.log("decoded: ", decoded)
+  try {
+    // jwt.verify(token, JWT_SECRET!) returns a decoded token.
+    // if decoded is successful, it typically returns the payload of the JWT. However, the TypeScript type definition for jwt.verify() might not be specific about the exact structure of this payload. It might a more general type like object or any.
+    const decoded = jwt.verify(token, JWT_SECRET as string) as PayloadProps;
 
     if (!decoded) {
       res.status(400).json({ success: false, message: "Invalid token." })
       return;
     }
+    req.userId = decoded.userId;
+    req.role = decoded.role;
 
     next();
   } catch (error) {
