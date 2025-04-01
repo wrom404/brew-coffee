@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import path from "path";
 import dotenv from "dotenv"
 import logger from "./middleware/log/logger";
 import cors from 'cors'
@@ -20,6 +21,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 app.use(logger)
+
+app.use("/uploads", express.static(path.resolve(__dirname, "./uploads/products")));
 
 app.use('/api/auth', authRoutes)
 
