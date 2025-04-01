@@ -1,9 +1,22 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import { integer, pgTable, timestamp, varchar, text, decimal, boolean } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
-  password: varchar({ length: 255 }).notNull(),
-  role: varchar({ length: 50 }).default("user"),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  password: varchar("password", { length: 255 }).notNull(),
+  role: varchar("role", { length: 50 }).default("customer").$type<"admin" | "customer">(),
+  created_at: timestamp({ withTimezone: true }).defaultNow() // store date with timezone (timestampz)
 });
+
+
+export const products = pgTable('products', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+  imageUrl: text('image_url'),
+  stockQuantity: integer('stock_quantity').default(0),
+  isAvailable: boolean('is_available').default(true),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+})

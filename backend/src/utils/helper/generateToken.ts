@@ -7,7 +7,7 @@ function generateToken(userId: number, role: string, res: Response) {
 
   const payload: PayloadProps = { userId, role }
 
-  const token = jwt.sign(payload, MY_SECRET_KEY!, {
+  const token = jwt.sign(payload, MY_SECRET_KEY as string, {
     expiresIn: "7d",
   })
 

@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
-import { users } from "../db/schema";
-import { db } from "../db/index";
+import { users } from "../../db/schema";
+import { db } from "../../db/index";
 import { eq } from "drizzle-orm";
-import hashPassword from "../utils/helper/hashPassword";
-import validatePassword from "../utils/helper/validatePassword";
-import generateToken from "../utils/helper/generateToken";
+import hashPassword from "../../utils/helper/hashPassword";
+import validatePassword from "../../utils/helper/validatePassword";
+import generateToken from "../../utils/helper/generateToken";
 
-export function getUser(req: Request, res: Response): any {
-  res.status(200).json({ success: true, message: "Success." })
-  return;
-}
 
 
 export async function signupUser(req: Request, res: Response): Promise<void> {
@@ -19,7 +15,7 @@ export async function signupUser(req: Request, res: Response): Promise<void> {
     res.status(400).json({ success: false, message: "Validation error." })
     return;
   }
-  
+
   try {
     const isUserExist = await db.select().from(users).where(eq(users.email, email));
 
@@ -82,7 +78,6 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
 
 
 export async function logoutUser(req: Request, res: Response): Promise<void> {
-  console.log("Inside of logout function")
   res.clearCookie("token");
   res.status(200).json({ success: true, message: "Logout successfully." })
   return;
