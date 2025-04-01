@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv"
 import userRoutes from "./routes/userRoutes";
 import cookieParser from 'cookie-parser'
+import logger from "./middleware/log/logger";
 
 dotenv.config()
 const app: Express = express();
@@ -12,7 +13,8 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }))
 
-app.use(cookieParser())
+// app.use(cookieParser())
+app.use(logger)
 
 app.use('/api/auth', userRoutes)
 
