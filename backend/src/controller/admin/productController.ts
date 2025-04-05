@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 // import path from "path";
 // import fs from 'fs/promises'
-import { products } from "../../db/schema";
+import { products, users } from "../../db/schema";
 import { db } from "../../db/index";
 import { eq } from "drizzle-orm";
+import deletePhoto from "../../utils/helper/deletePhoto";
 
 export async function createProduct(req: Request, res: Response): Promise<void> {
   const { name, description, price, stockQuantity } = req.body;
@@ -88,6 +89,45 @@ export async function getProductById(req: Request, res: Response) {
     }
 
     res.status(200).json({ success: true, product: queryProduct })
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error", error })
+    return;
+  }
+}
+
+export async function deleteProduct(req: Request, res: Response): Promise<void> {
+  const { productId } = req.params;
+
+  if (!productId) {
+    res.status(404).json({ success: false, message: "Invalid id, user id is null." })
+    return;
+  }
+
+  const parseId = Number(productId);
+
+  if (isNaN(parseId)) {
+    res.status(400).json({ success: false, message: "Invalid id, Id is not a number." })
+    return;
+  }
+
+  try {
+    const selectedProduct = await db.select().from(products).where(eq(products.id, parseId))
+
+    if (selectedProduct.length === 0) {
+      res.status(404).json({ success: false, message: "Cannot find product." })
+      return;
+    }
+
+    deletePhoto(selectedProduct[0].imageUrl || "")
+
+    const deletedProduct = await db.delete(products).where(eq(products.id, parseId)).returning();
+
+    if (deletedProduct.length === 0) {
+      res.status(400).json({ success: false, message: "Cannot find product" })
+      return;
+    }
+    res.status(200).json({ success: true, deletedProduct, message: "Product successfully deleted" })
+    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
     return;

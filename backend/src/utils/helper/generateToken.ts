@@ -8,12 +8,12 @@ function generateToken(userId: number, role: string, res: Response) {
   const payload: PayloadProps = { userId, role }
 
   const token = jwt.sign(payload, JWT_SECRET as string, {
-    expiresIn: "1h",
+    expiresIn: "1d",
   })
 
   res.cookie("token", token, {
     httpOnly: true,
-    maxAge: 3600000, // 1 hour
+    maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
     sameSite: "strict",
   });
 

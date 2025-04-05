@@ -14,7 +14,7 @@ const app: Express = express();
 
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(express.json());
 
@@ -29,6 +29,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
 
 app.use('/api/admin/product', adminProductRoutes)
+
+// app.use('/api/customer/product', )
 
 // 404 "not found" routes
 app.use(notFoundRoute)
