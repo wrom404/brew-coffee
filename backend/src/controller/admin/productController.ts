@@ -32,7 +32,6 @@ export async function createProduct(req: Request, res: Response): Promise<void> 
   }
 }
 
-
 export async function getAllProducts(req: Request, res: Response): Promise<void> {
   // try {
   //   const uploadDir = path.join(__dirname, "../../uploads/products"); // Correct path
@@ -67,7 +66,7 @@ export async function getAllProducts(req: Request, res: Response): Promise<void>
 }
 
 
-export async function getProductById(req: Request, res: Response) {
+export async function getProductById(req: Request, res: Response): Promise<void> {
   const { productId } = req.params;
 
   if (!productId) {
@@ -79,6 +78,7 @@ export async function getProductById(req: Request, res: Response) {
 
   if (isNaN(parseId)) {
     res.status(400).json({ success: false, message: "Invalid id" })
+    return;
   }
 
   try {
@@ -111,14 +111,14 @@ export async function deleteProduct(req: Request, res: Response): Promise<void> 
   }
 
   try {
-    const selectedProduct = await db.select().from(products).where(eq(products.id, parseId))
+    const queryProduct = await db.select().from(products).where(eq(products.id, parseId))
 
-    if (selectedProduct.length === 0) {
+    if (queryProduct.length === 0) {
       res.status(404).json({ success: false, message: "Cannot find product." })
       return;
     }
 
-    deletePhoto(selectedProduct[0].imageUrl || "")
+    deletePhoto(queryProduct[0].imageUrl || "")
 
     const deletedProduct = await db.delete(products).where(eq(products.id, parseId)).returning();
 
@@ -128,6 +128,46 @@ export async function deleteProduct(req: Request, res: Response): Promise<void> 
     }
     res.status(200).json({ success: true, deletedProduct, message: "Product successfully deleted" })
     return;
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error", error })
+    return;
+  }
+}
+
+export async function updateProduct(req: Request, res: Response): Promise<void> {
+  const { productId } = req.params;
+  const { name, description, price, stockQuantity } = req.body;
+  const imageUrl = req.file ? `../../uploads/products${req.file.filename}` : null;
+
+  if (!name || !description || !price || !stockQuantity || !imageUrl || !productId) {
+    res.status(400).json({ success: false, message: "All fields are required, including an image." });
+    return;
+  }
+
+  const parseId = Number(productId)
+
+  if (isNaN(parseId)) {
+    res.status(400).json({ success: false, message: "Invalid id" })
+    return;
+  }
+
+  try {
+    const queryProduct = await db.select().from(products).where(eq(products.id, parseId));
+
+    if (queryProduct.length === 0) {
+      res.status(400).json({ success: false, message: "Product not found" })
+    }
+
+    deletePhoto(queryProduct[0].imageUrl || "")
+
+    const result = await db.update(products).set({ name, description, price, imageUrl, stockQuantity }).where(eq(products.id, parseId)).returning();
+
+    if (result.length === 0) {
+      res.status(400).json({ success: false, message: "Cannot find product" });
+      return;
+    }
+
+    res.status(200).json({ success: true, updatedProduct: result, message: "Product updated successfully." })
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
     return;
