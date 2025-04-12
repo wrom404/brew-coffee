@@ -8,6 +8,7 @@ import errorHandler from "./middleware/error/errorHandler";
 import authRoutes from "./routes/auth/authRoutes";
 import userRoutes from "./routes/user/userRoutes";
 import adminProductRoutes from "./routes/admin/productRoutes";
+import adminCustomerRoutes from "./routes/admin/customerRoutes"
 
 dotenv.config()
 const app: Express = express();
@@ -24,13 +25,15 @@ app.use(logger)
 
 app.use("/uploads", express.static(path.resolve(__dirname, "./uploads/products")));
 
+// authentication routes
 app.use('/api/auth', authRoutes)
 
+// customer routes
 app.use('/api/user', userRoutes)
 
+// admin routes 
 app.use('/api/admin/product', adminProductRoutes)
-
-// app.use('/api/customer/product', )
+app.use('/api/admin/customer', adminCustomerRoutes)
 
 // 404 "not found" routes
 app.use(notFoundRoute)

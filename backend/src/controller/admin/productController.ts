@@ -65,7 +65,6 @@ export async function getAllProducts(req: Request, res: Response): Promise<void>
   }
 }
 
-
 export async function getProductById(req: Request, res: Response): Promise<void> {
   const { productId } = req.params;
 
