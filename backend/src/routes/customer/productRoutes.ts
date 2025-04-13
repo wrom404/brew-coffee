@@ -1,10 +1,14 @@
 import express from "express";
-import { getUser } from "../../controller/user/userController";
 import authMiddleware from "../../middleware/auth/authMiddleware";
+import { getAllProducts, getProductById } from "../../controller/customer/productController";
 
 const routes = express.Router();
 
-routes.get('/', authMiddleware, getUser)
+routes.use(authMiddleware)
+
+routes.get('/', getAllProducts)
+
+routes.get('/:productId', getProductById)
 
 export default routes;
 

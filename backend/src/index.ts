@@ -5,8 +5,8 @@ import logger from "./middleware/log/logger";
 import cors from 'cors'
 import notFoundRoute from "./middleware/error/notFoundHandler";
 import errorHandler from "./middleware/error/errorHandler";
-import authRoutes from "./routes/auth/authRoutes";
-import userRoutes from "./routes/user/userRoutes";
+import authUserRoutes from "./routes/auth/authRoutes";
+import customerProductRoutes from "./routes/customer/productRoutes";
 import adminProductRoutes from "./routes/admin/productRoutes";
 import adminCustomerRoutes from "./routes/admin/customerRoutes"
 
@@ -26,10 +26,10 @@ app.use(logger)
 app.use("/uploads", express.static(path.resolve(__dirname, "./uploads/products")));
 
 // authentication routes
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authUserRoutes)
 
 // customer routes
-app.use('/api/user', userRoutes)
+app.use('/api/customer/product', customerProductRoutes)
 
 // admin routes 
 app.use('/api/admin/product', adminProductRoutes)
