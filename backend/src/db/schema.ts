@@ -16,6 +16,7 @@ export const products = pgTable('products', {
   description: text('description'),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   imageUrl: text('image_url'),
+  category: varchar('category', { length: 50 }).notNull().default("espresso"),
   stockQuantity: integer('stock_quantity').default(0),
   isAvailable: boolean('is_available').default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),

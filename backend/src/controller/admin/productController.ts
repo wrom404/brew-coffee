@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 // import path from "path";
 // import fs from 'fs/promises'
-import { products, users } from "../../db/schema";
+import { products } from "../../db/schema";
 import { db } from "../../db/index";
 import { eq } from "drizzle-orm";
 import deletePhoto from "../../utils/helper/deletePhoto";
