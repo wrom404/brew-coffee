@@ -7,9 +7,9 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
   const { productId, quantity, size, notes } = req.body;
 
-  const parseId = Number(customerId);
+  const parsedId = Number(customerId);
 
-  if (isNaN(parseId)) {
+  if (isNaN(parsedId)) {
     res.status(400).json({ success: false, message: "Invalid id" });
     return;
   }
@@ -20,7 +20,7 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
   }
 
   try {
-    const result = await db.insert(cartItems).values({ userId: parseId, productId, quantity, size, notes }).returning();;
+    const result = await db.insert(cartItems).values({ userId: parsedId, productId, quantity, size, notes }).returning();;
 
     if (result.length === 0) {
       res.status(400).json({ success: false, message: "Error, something went wrong." })
@@ -30,6 +30,32 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
     res.status(200).json({ success: true, itemAdded: result })
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error. " })
+    return;
+  }
+}
+
+export async function getAllCartProduct(req: Request, res: Response): Promise<void> {
+  const { customerId } = req.params;
+
+  const parsedId = Number(customerId)
+
+  if (isNaN(parsedId)) {
+    res.status(400).json({ success: false, message: "Invalid id" });
+    return;
+  }
+
+  try {
+    const result = await db.select().from(cartItems).where(eq(cartItems.userId, parsedId))
+
+    if (result.length === 0) {
+      res.status(400).json({ success: false, message: "Cart is empty" });
+      return;
+    }
+
+    res.status(200).json({ success: true, cartProduct: result });
+    return;
+  } catch (error) {
+    res.status(500).json({ error, message: "Internal server error." })
     return;
   }
 }
