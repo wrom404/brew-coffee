@@ -1,3 +1,37 @@
+import { Request, Response } from "express";
+import { cartItems } from "../../db/schema";
+import { db } from "../../db";
+import { eq } from "drizzle-orm";
 
+export async function addToCart(req: Request, res: Response): Promise<void> {
+  const { customerId } = req.params;
+  const { productId, quantity, size, notes } = req.body;
 
- // Cart and checkout operations
+  const parseId = Number(customerId);
+
+  if (isNaN(parseId)) {
+    res.status(400).json({ success: false, message: "Invalid id" });
+    return;
+  }
+
+  if (!customerId || !productId || !quantity || !size) {
+    res.status(400).json({ success: false, message: "Invalid, please input all the input fields." })
+    return;
+  }
+
+  try {
+    const result = await db.insert(cartItems).values({ userId: parseId, productId, quantity, size, notes }).returning();;
+
+    if (result.length === 0) {
+      res.status(400).json({ success: false, message: "Error, something went wrong." })
+      return;
+    }
+
+    res.status(200).json({ success: true, itemAdded: result })
+  } catch (error) {
+    res.status(500).json({ error, message: "Internal server error. " })
+    return;
+  }
+}
+
+// Cart and checkout operations

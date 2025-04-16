@@ -6,9 +6,11 @@ import cors from 'cors'
 import notFoundRoute from "./middleware/error/notFoundHandler";
 import errorHandler from "./middleware/error/errorHandler";
 import authUserRoutes from "./routes/auth/authRoutes";
-import customerProductRoutes from "./routes/customer/productRoutes";
 import adminProductRoutes from "./routes/admin/productRoutes";
 import adminCustomerRoutes from "./routes/admin/customerRoutes"
+
+import customerProductRoutes from "./routes/customer/productRoutes";
+import customerCartRoutes from "./routes/customer/cartRoutes"
 
 dotenv.config()
 const app: Express = express();
@@ -26,6 +28,7 @@ app.use('/api/auth', authUserRoutes)
 
 // customer routes
 app.use('/api/customer/product', customerProductRoutes)
+app.use('/api/customer/cart', customerCartRoutes)
 
 // admin routes 
 app.use('/api/admin/product', adminProductRoutes)
