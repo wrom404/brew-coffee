@@ -12,15 +12,11 @@ import adminCustomerRoutes from "./routes/admin/customerRoutes"
 
 dotenv.config()
 const app: Express = express();
-
 const PORT = process.env.PORT || 4000;
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }))
-
 app.use(logger)
 
 app.use("/uploads", express.static(path.resolve(__dirname, "./uploads/products")));

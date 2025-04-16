@@ -52,4 +52,4 @@ export async function getProductById(req: Request, res: Response): Promise<void>
 
 
 
-// Customer-specific actions
+//for viewing/browsing only
