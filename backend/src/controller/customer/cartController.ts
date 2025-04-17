@@ -34,7 +34,7 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
   }
 }
 
-export async function getAllCartProduct(req: Request, res: Response): Promise<void> {
+export async function getAllProductCart(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
 
   const parsedId = Number(customerId)
@@ -53,6 +53,37 @@ export async function getAllCartProduct(req: Request, res: Response): Promise<vo
     }
 
     res.status(200).json({ success: true, cartProduct: result });
+    return;
+  } catch (error) {
+    res.status(500).json({ error, message: "Internal server error." })
+    return;
+  }
+}
+
+export async function deleteProductCart(req: Request, res: Response): Promise<void> {
+  const { cartProductId } = req.params;
+
+  if (!cartProductId) {
+    res.status(400).json({ success: false, message: "Product id is null." })
+    return;
+  }
+
+  const parsedId = Number(cartProductId);
+
+  if (isNaN(parsedId)) {
+    res.status(400).json({ success: false, message: "Id is not a number." })
+    return;
+  }
+
+  try {
+    const result = await db.delete(cartItems).where(eq(cartItems.id, parsedId)).returning();
+
+    if (result.length === 0) {
+      res.status(400).json({ success: false, message: "Something went wrong, invalid Id." })
+      return;
+    }
+
+    res.status(200).json({ success: true, deletedCartProduct: result, message: "Deleted successfully." })
     return;
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error." })
