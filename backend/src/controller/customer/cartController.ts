@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 
 export async function addToCart(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
-  const { productId, quantity, size, notes } = req.body;
+  const { productId, quantity, size } = req.body;
 
   const parsedId = Number(customerId);
 
@@ -20,7 +20,7 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
   }
 
   try {
-    const result = await db.insert(cartItems).values({ userId: parsedId, productId, quantity, size, notes }).returning();;
+    const result = await db.insert(cartItems).values({ userId: parsedId, productId, quantity, size }).returning();;
 
     if (result.length === 0) {
       res.status(400).json({ success: false, message: "Error, something went wrong." })
@@ -84,6 +84,38 @@ export async function deleteProductCart(req: Request, res: Response): Promise<vo
     }
 
     res.status(200).json({ success: true, deletedCartProduct: result, message: "Deleted successfully." })
+    return;
+  } catch (error) {
+    res.status(500).json({ error, message: "Internal server error." })
+    return;
+  }
+}
+
+export async function updateCartProduct(req: Request, res: Response): Promise<void> {
+  const { cartProductId } = req.params;
+  const { quantity, size } = req.body;
+
+  if (!cartProductId || !quantity || !size) {
+    res.status(400).json({ success: false, message: "Invalid, please input all the input fields." })
+    return;
+  }
+
+  const parsedId = Number(cartProductId);
+
+  if (isNaN(parsedId)) {
+    res.status(400).json({ success: false, message: "Id is not a number." })
+    return;
+  }
+
+  try {
+    const result = await db.update(cartItems).set({ quantity, size }).where(eq(cartItems.id, parsedId)).returning();
+
+    if (result.length === 0) {
+      res.status(400).json({ success: false, message: "Something went wrong, invalid Id." })
+      return;
+    }
+
+    res.status(200).json({ success: true, updatedCartProduct: result, message: "Updated successfully." })
     return;
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error." })
