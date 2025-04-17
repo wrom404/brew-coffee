@@ -2,30 +2,23 @@ import { Request, Response } from "express";
 import { cartItems } from "../../db/schema";
 import { db } from "../../db";
 import { eq } from "drizzle-orm";
+import isNotANumber from "../../utils/isNotANumber";
+import handleEmptyResult from "../../utils/handleEmptyResult";
+import validateRequiredFields from "../../utils/validateRequiredFields";
 
 export async function addToCart(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
   const { productId, quantity, size } = req.body;
 
+  if (validateRequiredFields(res, [customerId, productId, quantity, size])) return; // Stop execution if required fields are empty
+
   const parsedId = Number(customerId);
-
-  if (isNaN(parsedId)) {
-    res.status(400).json({ success: false, message: "Invalid id" });
-    return;
-  }
-
-  if (!customerId || !productId || !quantity || !size) {
-    res.status(400).json({ success: false, message: "Invalid, please input all the input fields." })
-    return;
-  }
+  if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
     const result = await db.insert(cartItems).values({ userId: parsedId, productId, quantity, size }).returning();;
 
-    if (result.length === 0) {
-      res.status(400).json({ success: false, message: "Error, something went wrong." })
-      return;
-    }
+    if (handleEmptyResult(result, res, "Failed to add product to cart.")) return;
 
     res.status(200).json({ success: true, itemAdded: result })
   } catch (error) {
@@ -38,19 +31,12 @@ export async function getAllProductCart(req: Request, res: Response): Promise<vo
   const { customerId } = req.params;
 
   const parsedId = Number(customerId)
-
-  if (isNaN(parsedId)) {
-    res.status(400).json({ success: false, message: "Invalid id" });
-    return;
-  }
+  if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
     const result = await db.select().from(cartItems).where(eq(cartItems.userId, parsedId))
 
-    if (result.length === 0) {
-      res.status(400).json({ success: false, message: "Cart is empty" });
-      return;
-    }
+    if (handleEmptyResult(result, res, "Cart is empty.")) return;
 
     res.status(200).json({ success: true, cartProduct: result });
     return;
@@ -69,19 +55,12 @@ export async function deleteProductCart(req: Request, res: Response): Promise<vo
   }
 
   const parsedId = Number(cartProductId);
-
-  if (isNaN(parsedId)) {
-    res.status(400).json({ success: false, message: "Id is not a number." })
-    return;
-  }
+  if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
     const result = await db.delete(cartItems).where(eq(cartItems.id, parsedId)).returning();
 
-    if (result.length === 0) {
-      res.status(400).json({ success: false, message: "Something went wrong, invalid Id." })
-      return;
-    }
+    if (handleEmptyResult(result, res, "Failed to delete product in cart.")) return;
 
     res.status(200).json({ success: true, deletedCartProduct: result, message: "Deleted successfully." })
     return;
@@ -95,25 +74,15 @@ export async function updateCartProduct(req: Request, res: Response): Promise<vo
   const { cartProductId } = req.params;
   const { quantity, size } = req.body;
 
-  if (!cartProductId || !quantity || !size) {
-    res.status(400).json({ success: false, message: "Invalid, please input all the input fields." })
-    return;
-  }
+  if (validateRequiredFields(res, [cartProductId, quantity, size])) return;
 
   const parsedId = Number(cartProductId);
-
-  if (isNaN(parsedId)) {
-    res.status(400).json({ success: false, message: "Id is not a number." })
-    return;
-  }
+  if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
     const result = await db.update(cartItems).set({ quantity, size }).where(eq(cartItems.id, parsedId)).returning();
 
-    if (result.length === 0) {
-      res.status(400).json({ success: false, message: "Something went wrong, invalid Id." })
-      return;
-    }
+    if (handleEmptyResult(result, res, "Failed to update product in cart.")) return;
 
     res.status(200).json({ success: true, updatedCartProduct: result, message: "Updated successfully." })
     return;

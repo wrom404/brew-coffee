@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { products } from "../../db/schema";
 import { db } from "../../db/index";
 import { eq } from "drizzle-orm";
-import deletePhoto from "../../utils/helper/deletePhoto";
+import deletePhoto from "../../utils/deletePhoto";
 
 export async function createProduct(req: Request, res: Response): Promise<void> {
   const { name, description, price, stockQuantity } = req.body;

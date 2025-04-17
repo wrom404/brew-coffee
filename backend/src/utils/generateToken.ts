@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Response } from 'express';
-import { PayloadProps } from '../../types/jwt';
+import { PayloadProps } from '../types/jwt';
 
 function generateToken(userId: number, role: string, res: Response) {
   const JWT_SECRET = process.env.JWT_SECRET;

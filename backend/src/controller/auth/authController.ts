@@ -2,10 +2,9 @@ import { Request, Response } from "express";
 import { users } from "../../db/schema";
 import { db } from "../../db/index";
 import { eq } from "drizzle-orm";
-import hashPassword from "../../utils/helper/hashPassword";
-import validatePassword from "../../utils/helper/validatePassword";
-import generateToken from "../../utils/helper/generateToken";
-
+import hashPassword from "../../utils/hashPassword";
+import validatePassword from "../../utils/validatePassword";
+import generateToken from "../../utils/generateToken";
 
 
 export async function signupUser(req: Request, res: Response): Promise<void> {
