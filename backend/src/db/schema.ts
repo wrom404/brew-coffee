@@ -9,7 +9,6 @@ export const users = pgTable("users", {
   created_at: timestamp({ withTimezone: true }).defaultNow() // store date with timezone (timestampz)
 });
 
-
 export const products = pgTable('products', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar('name', { length: 255 }).notNull(),

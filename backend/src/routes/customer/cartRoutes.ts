@@ -9,7 +9,7 @@ routes.use(authMiddleware)
 
 routes.post('/:customerId/add', addToCart)
 
-routes.get("/:customerId", getAllProductCart)
+routes.get("/:customerId", getAllProductCart) // use to view cart
 
 routes.delete("/:cartProductId", deleteProductCart)
 

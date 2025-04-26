@@ -70,6 +70,7 @@ export async function getProductById(req: Request, res: Response): Promise<void>
     if (handleEmptyResult(queryProduct, res, "No product found.")) return;
 
     res.status(200).json({ success: true, product: queryProduct })
+    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
     return;

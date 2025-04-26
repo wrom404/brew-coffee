@@ -9,7 +9,6 @@ import isNotANumber from "../../utils/isNotANumber";
 export async function getAllProducts(req: Request, res: Response): Promise<void> {
   try {
     const result = await db.select().from(products);
-
     if (handleEmptyResult(result, res, "No products found.")) return;
 
     res.status(200).json({ success: true, products: result })
@@ -22,7 +21,7 @@ export async function getAllProducts(req: Request, res: Response): Promise<void>
 
 export async function getProductById(req: Request, res: Response): Promise<void> {
   const { productId } = req.params;
-
+  
   if (validateRequiredFields(res, [productId])) return;
 
   const parsedId = Number(productId)
