@@ -30,6 +30,8 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
 export async function getAllProductCart(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
 
+  if (validateRequiredFields(res, [customerId], "Invalid, customer id is null.")) return;
+
   const parsedId = Number(customerId)
   if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
@@ -49,10 +51,7 @@ export async function getAllProductCart(req: Request, res: Response): Promise<vo
 export async function deleteProductCart(req: Request, res: Response): Promise<void> {
   const { cartProductId } = req.params;
 
-  if (!cartProductId) {
-    res.status(400).json({ success: false, message: "Product id is null." })
-    return;
-  }
+  if (validateRequiredFields(res, [cartProductId], "Invalid, product id is null.")) return;
 
   const parsedId = Number(cartProductId);
   if (isNotANumber(parsedId, res)) return; // Stop execution if invalid

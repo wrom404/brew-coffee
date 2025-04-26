@@ -5,23 +5,19 @@ import { products } from "../../db/schema";
 import { db } from "../../db/index";
 import { eq } from "drizzle-orm";
 import deletePhoto from "../../utils/deletePhoto";
+import validateRequiredFields from "../../utils/validateRequiredFields";
+import handleEmptyResult from "../../utils/handleEmptyResult";
+import isNotANumber from "../../utils/isNotANumber";
 
 export async function createProduct(req: Request, res: Response): Promise<void> {
   const { name, description, price, stockQuantity } = req.body;
   const imageUrl = req.file ? `../../uploads/products${req.file.filename}` : null;
 
-  if (!name || !description || !price || !stockQuantity || !imageUrl) {
-    res.status(400).json({ success: false, message: "All fields are required, including an image." });
-    return;
-  }
+  if (validateRequiredFields(res, [name, description, price, stockQuantity, imageUrl])) return;
 
   try {
     const newProduct = await db.insert(products).values({ name, description, price, imageUrl, stockQuantity }).returning();
-
-    if (newProduct.length === 0) {
-      res.status(500).json({ success: false, message: "Database insertion failed." });
-      return;
-    }
+    if (handleEmptyResult(newProduct, res, "Failed to create product.")) return;
 
     res.status(201).json({ success: true, data: newProduct });
     return;
@@ -51,11 +47,7 @@ export async function getAllProducts(req: Request, res: Response): Promise<void>
   // }
   try {
     const queryProducts = await db.select().from(products);
-
-    if (queryProducts.length === 0) {
-      res.status(400).json({ success: false, message: "No products found" })
-      return;
-    }
+    if (handleEmptyResult(queryProducts, res, "no products found.")) return;
 
     res.status(200).json({ success: true, products: queryProducts })
     return;
@@ -68,24 +60,14 @@ export async function getAllProducts(req: Request, res: Response): Promise<void>
 export async function getProductById(req: Request, res: Response): Promise<void> {
   const { productId } = req.params;
 
-  if (!productId) {
-    res.status(400).json({ success: false, message: "No product id provided." })
-    return;
-  }
+  if (validateRequiredFields(res, [productId], "Product ID is required and must be valid.")) return;
 
   const parseId = Number(productId)
-
-  if (isNaN(parseId)) {
-    res.status(400).json({ success: false, message: "Invalid id" })
-    return;
-  }
+  if (isNotANumber(parseId, res)) return;
 
   try {
     const queryProduct = await db.select().from(products).where(eq(products.id, parseId))
-
-    if (queryProduct.length === 0) {
-      res.status(400).json({ success: false, message: "Product not found" })
-    }
+    if (handleEmptyResult(queryProduct, res, "No product found.")) return;
 
     res.status(200).json({ success: true, product: queryProduct })
   } catch (error) {
@@ -97,34 +79,20 @@ export async function getProductById(req: Request, res: Response): Promise<void>
 export async function deleteProduct(req: Request, res: Response): Promise<void> {
   const { productId } = req.params;
 
-  if (!productId) {
-    res.status(404).json({ success: false, message: "Invalid id, user id is null." })
-    return;
-  }
+  if (validateRequiredFields(res, [productId], "Product ID is required and must be valid.")) return;
 
   const parseId = Number(productId);
-
-  if (isNaN(parseId)) {
-    res.status(400).json({ success: false, message: "Invalid id, Id is not a number." })
-    return;
-  }
+  if (isNotANumber(parseId, res)) return;
 
   try {
     const queryProduct = await db.select().from(products).where(eq(products.id, parseId))
+    if (handleEmptyResult(queryProduct, res, "No product found.")) return;
 
-    if (queryProduct.length === 0) {
-      res.status(404).json({ success: false, message: "Cannot find product." })
-      return;
-    }
-
-    deletePhoto(queryProduct[0].imageUrl || "")
+    deletePhoto(queryProduct[0].imageUrl || "");
 
     const deletedProduct = await db.delete(products).where(eq(products.id, parseId)).returning();
+    if (handleEmptyResult(deletedProduct, res, "Failed to delete product.")) return;
 
-    if (deletedProduct.length === 0) {
-      res.status(400).json({ success: false, message: "Cannot find product" })
-      return;
-    }
     res.status(200).json({ success: true, deletedProduct, message: "Product successfully deleted" })
     return;
   } catch (error) {
@@ -138,33 +106,19 @@ export async function updateProduct(req: Request, res: Response): Promise<void> 
   const { name, description, price, stockQuantity } = req.body;
   const imageUrl = req.file ? `../../uploads/products${req.file.filename}` : null;
 
-  if (!name || !description || !price || !stockQuantity || !imageUrl || !productId) {
-    res.status(400).json({ success: false, message: "All fields are required, including an image." });
-    return;
-  }
+  if (validateRequiredFields(res, [name, description, price, stockQuantity, imageUrl])) return;
 
   const parseId = Number(productId)
-
-  if (isNaN(parseId)) {
-    res.status(400).json({ success: false, message: "Invalid id" })
-    return;
-  }
+  if (isNotANumber(parseId, res)) return;
 
   try {
     const queryProduct = await db.select().from(products).where(eq(products.id, parseId));
-
-    if (queryProduct.length === 0) {
-      res.status(400).json({ success: false, message: "Product not found" })
-    }
+    if (handleEmptyResult(queryProduct, res, "No product found.")) return;
 
     deletePhoto(queryProduct[0].imageUrl || "")
 
     const result = await db.update(products).set({ name, description, price, imageUrl, stockQuantity }).where(eq(products.id, parseId)).returning();
-
-    if (result.length === 0) {
-      res.status(400).json({ success: false, message: "Cannot find product" });
-      return;
-    }
+    if (handleEmptyResult(result, res, "Failed to update product.")) return;
 
     res.status(200).json({ success: true, updatedProduct: result, message: "Product updated successfully." })
   } catch (error) {

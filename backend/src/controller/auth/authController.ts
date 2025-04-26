@@ -5,15 +5,14 @@ import { eq } from "drizzle-orm";
 import hashPassword from "../../utils/hashPassword";
 import validatePassword from "../../utils/validatePassword";
 import generateToken from "../../utils/generateToken";
+import validateRequiredFields from "../../utils/validateRequiredFields";
+import handleEmptyResult from "../../utils/handleEmptyResult";
 
-
+// Latest task: Continue using the reusable function validateRequiredFields, isNotANumber and handleEmptyResult
 export async function signupUser(req: Request, res: Response): Promise<void> {
   const { name, email, password } = req.body
 
-  if (!name || !email || !password) {
-    res.status(400).json({ success: false, message: "Validation error." })
-    return;
-  }
+  if (validateRequiredFields(res, [name, email, password])) return; // Stop execution if required fields are empty
 
   try {
     const isUserExist = await db.select().from(users).where(eq(users.email, email));
@@ -24,15 +23,11 @@ export async function signupUser(req: Request, res: Response): Promise<void> {
     }
 
     const hashedPassword: string = await hashPassword(password);
+    const result = await db.insert(users).values({ name, email, password: hashedPassword }).returning();
 
-    const newUser = await db.insert(users).values({ name, email, password: hashedPassword }).returning();
+    if (handleEmptyResult(result, res, "Failed to signup user.")) return;
 
-    if (newUser.length === 0) {
-      res.status(400).json({ success: false, message: "Insert query error." })
-      return;
-    }
-
-    res.status(201).json({ success: true, newUser, message: "User created successfully" })
+    res.status(201).json({ success: true, newUser: result, message: "User created successfully" })
     return;
   } catch (error) {
     res.status(400).json({ success: false, error })
@@ -40,28 +35,19 @@ export async function signupUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-
 export async function loginUser(req: Request, res: Response): Promise<void> {
   const { email, password } = req.body
 
-  if (!email || !password) {
-    res.status(400).json({ success: false, message: "Validation error." })
-    return;
-  }
+  if (validateRequiredFields(res, [email, password])) return;
+
   try {
     const isUserExist = await db.select().from(users).where(eq(users.email, email));
 
-    if (isUserExist.length === 0) {
-      res.status(400).json({ success: false, message: "Email not found." })
-      return;
-    }
+    if (handleEmptyResult(isUserExist, res, "Email not found.")) return;
 
     const fetchedUser = isUserExist[0];
 
-    console.log("fetchedUser: ", fetchedUser)
-
     const isPasswordValid = await validatePassword(password, fetchedUser.password);
-
     if (!isPasswordValid) {
       res.status(400).json({ success: false, message: "Password is incorrect." })
       return;
@@ -76,7 +62,6 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
     return;
   }
 }
-
 
 export async function logoutUser(req: Request, res: Response): Promise<void> {
   res.clearCookie("token");
