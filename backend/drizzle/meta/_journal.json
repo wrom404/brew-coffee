@@ -43,6 +43,20 @@
       "when": 1744893410012,
       "tag": "0005_fresh_wendell_rand",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1745677200789,
+      "tag": "0006_busy_celestials",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1745677749502,
+      "tag": "0007_nostalgic_warbound",
+      "breakpoints": true
     }
   ]
 }

@@ -27,5 +27,6 @@ export const cartItems = pgTable('cart_items', {
   productId: integer('product_id').notNull().references(() => products.id),
   quantity: integer('quantity').notNull().default(1),
   size: varchar('size', { length: 20 }),
+  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });

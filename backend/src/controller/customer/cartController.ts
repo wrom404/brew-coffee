@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { cartItems } from "../../db/schema";
+import { cartItems, products } from "../../db/schema";
 import { db } from "../../db";
 import { eq } from "drizzle-orm";
 import isNotANumber from "../../utils/isNotANumber";
@@ -16,11 +16,22 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
   if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
-    const result = await db.insert(cartItems).values({ userId: parsedId, productId, quantity, size }).returning();;
+    const resultQueryProduct = await db.select().from(products).where(eq(products.id, productId));
+    if (handleEmptyResult(resultQueryProduct, res, "No product found.")) return;
 
+    const totalAmount = resultQueryProduct.reduce((total: number, item) => {
+      return total + (Number(item.price) * quantity)
+    }, 0);
+
+    const fixedAmount = totalAmount.toFixed(2);
+
+    const result = await db.insert(cartItems).values({ userId: parsedId, productId, quantity, size, amount: fixedAmount }).returning();;
     if (handleEmptyResult(result, res, "Failed to add product to cart.")) return;
 
-    res.status(200).json({ success: true, itemAdded: result })
+    console.log("result: ", result[0]);
+
+    res.status(200).json({ success: true, product: result[0] })
+    return;
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error. " })
     return;
