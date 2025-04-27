@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { db } from "../../db";
-import { eq, inArray, and } from "drizzle-orm";
+import { eq, inArray, and, desc } from "drizzle-orm";
 import validateRequiredFields from "../../utils/validateRequiredFields";
 import isNotANumber from "../../utils/isNotANumber";
 import { cartItems, orderItems, orders } from "../../db/schema";
@@ -27,11 +27,9 @@ export async function checkOutProduct(req: Request, res: Response): Promise<void
       .where(
         and(
           eq(cartItems.userId, parsedId),
-          inArray(cartItems.id, selectedCartProductIds)
+          inArray(cartItems.id, selectedCartProductIds) // match the cart id from the selectedCartProductIds (array of product id from cart)
         )
       );
-
-    console.log("selectedProducts: ", selectedProducts)
 
     if (handleEmptyResult(selectedProducts, res)) return;
 
@@ -50,8 +48,6 @@ export async function checkOutProduct(req: Request, res: Response): Promise<void
       updatedAt: new Date(),
     }).returning();
 
-    console.log("newOrder: ", newOrder)
-
     // 4. Insert each cart item into 'order_items'
     const orderItemsData = selectedProducts.map(item => ({
       orderId: newOrder.id,
@@ -63,17 +59,33 @@ export async function checkOutProduct(req: Request, res: Response): Promise<void
       updatedAt: new Date(),
     }));
 
-    console.log("orderItemsData: ", orderItemsData)
-
     const orderedProduct = await db.insert(orderItems).values(orderItemsData).returning();
 
     // 5. Delete the checked-out cart items
     await db.delete(cartItems)
       .where(inArray(cartItems.id, selectedCartProductIds));
 
-
     // 6. Respond success
     res.status(201).json({ success: true, message: "Order placed successfully.", orderId: newOrder.id, orderedProduct });
+    return;
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error", error })
+    return;
+  }
+}
+
+export async function getActiveOrder(req: Request, res: Response): Promise<void> {
+  const { customerId } = req.params;
+
+  const parsedId = Number(customerId);
+  if (isNotANumber(parsedId, res)) return;
+
+  try {
+    const result = await db.select().from(orders).where(and(eq(orders.userId, parsedId), inArray(orders.status, ["Pending", "Preparing"]))).orderBy(desc(orders.createdAt));
+    if (handleEmptyResult(result, res, "No active order found.")) return;
+
+    console.log("active order: ", result);
+    res.status(200).json({ success: true, order: result })
     return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
