@@ -5,6 +5,7 @@ import validateRequiredFields from "../../utils/validateRequiredFields";
 import isNotANumber from "../../utils/isNotANumber";
 import { cartItems, orderItems, orders } from "../../db/schema";
 import handleEmptyResult from "../../utils/handleEmptyResult";
+import { isArray } from "util";
 
 
 export async function checkOutProduct(req: Request, res: Response): Promise<void> {
@@ -85,7 +86,27 @@ export async function getActiveOrder(req: Request, res: Response): Promise<void>
     if (handleEmptyResult(result, res, "No active order found.")) return;
 
     console.log("active order: ", result);
-    res.status(200).json({ success: true, order: result })
+    res.status(200).json({ success: true, activeOrder: result })
+    return;
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error", error })
+    return;
+  }
+}
+
+export async function getOrderHistory(req: Request, res: Response): Promise<void> {
+  const { customerId } = req.params;
+
+  const parsedId = Number(customerId);
+  if (isNotANumber(parsedId, res)) return;
+
+  try {
+    const result = await db.select().from(orders).where(and(eq(orders.userId, parsedId), inArray(orders.status, ["Completed", "Cancelled"]))).orderBy(desc(orders.createdAt));
+
+    if (handleEmptyResult(result, res, "No order history yet.")) return;
+
+    console.log("order history: ", result);
+    res.status(200).json({ success: true, orderHistory: result })
     return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })

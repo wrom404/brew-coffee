@@ -1,6 +1,6 @@
 import express from "express";
 import authMiddleware from "../../middleware/auth/authMiddleware";
-import { checkOutProduct, getActiveOrder } from "../../controller/customer/orderController";
+import { checkOutProduct, getActiveOrder, getOrderHistory } from "../../controller/customer/orderController";
 
 const routes = express.Router();
 
@@ -9,6 +9,8 @@ routes.use(authMiddleware)
 routes.post("/:customerId", checkOutProduct);
 
 routes.get("/:customerId", getActiveOrder);
+
+routes.get("/:customerId/history", getOrderHistory);
 
 export default routes;
 
