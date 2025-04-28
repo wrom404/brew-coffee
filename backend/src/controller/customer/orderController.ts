@@ -3,9 +3,8 @@ import { db } from "../../db";
 import { eq, inArray, and, desc } from "drizzle-orm";
 import validateRequiredFields from "../../utils/validateRequiredFields";
 import isNotANumber from "../../utils/isNotANumber";
-import { cartItems, orderItems, orders } from "../../db/schema";
+import { cartItems, orderItems, orders, products } from "../../db/schema";
 import handleEmptyResult from "../../utils/handleEmptyResult";
-import { isArray } from "util";
 
 
 export async function checkOutProduct(req: Request, res: Response): Promise<void> {
@@ -78,21 +77,61 @@ export async function checkOutProduct(req: Request, res: Response): Promise<void
 export async function getActiveOrder(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
 
+  if (validateRequiredFields(res, [customerId])) return;
+
   const parsedId = Number(customerId);
   if (isNotANumber(parsedId, res)) return;
 
   try {
-    const result = await db.select().from(orders).where(and(eq(orders.userId, parsedId), inArray(orders.status, ["Pending", "Preparing"]))).orderBy(desc(orders.createdAt));
-    if (handleEmptyResult(result, res, "No active order found.")) return;
+    // 1. Fetch orders
+    const activeOrders = await db.select()
+      .from(orders)
+      .where(
+        and(
+          eq(orders.userId, parsedId),
+          inArray(orders.status, ["Pending", "Preparing"])
+        )
+      )
+      .orderBy(desc(orders.createdAt));
 
-    console.log("active order: ", result);
-    res.status(200).json({ success: true, activeOrder: result })
-    return;
+    if (activeOrders.length === 0) {
+      res.status(200).json({ success: true, orders: [] });
+      return;
+    }
+
+    // 2. Fetch all orderItems for these orders
+    const orderIds = activeOrders.map(order => order.id);
+
+    // This query selects all items belonging to the customer's orders.
+    // It gets details from the 'order_items' table and joins with the 'products' table
+    // to also fetch the product name (instead of just product IDs).
+    // We use 'inArray' to only fetch order items for the customer's specific orders.
+    // This helps the customer easily view their order details including product names, quantity, size, and price.
+    const orderItemsData = await db.select({
+      orderId: orderItems.orderId,
+      productId: orderItems.productId,
+      quantity: orderItems.quantity,
+      price: orderItems.price,
+      size: orderItems.size,
+      productName: products.name, // join products table
+      productImage: products.imageUrl
+    })
+      .from(orderItems)
+      .innerJoin(products, eq(orderItems.productId, products.id))
+      .where(inArray(orderItems.orderId, orderIds));
+
+    // 3. Group items under each order
+    const ordersWithItems = activeOrders.map(order => ({
+      ...order,
+      items: orderItemsData.filter(item => item.orderId === order.id)
+    }));
+
+    res.status(200).json({ success: true, orders: ordersWithItems });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
+    res.status(500).json({ success: false, message: "Internal server error", error });
   }
 }
+
 
 export async function getOrderHistory(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
@@ -101,15 +140,51 @@ export async function getOrderHistory(req: Request, res: Response): Promise<void
   if (isNotANumber(parsedId, res)) return;
 
   try {
-    const result = await db.select().from(orders).where(and(eq(orders.userId, parsedId), inArray(orders.status, ["Completed", "Cancelled"]))).orderBy(desc(orders.createdAt));
+    // 1. Fetch orders
+    const activeOrders = await db.select()
+      .from(orders)
+      .where(
+        and(
+          eq(orders.userId, parsedId),
+          inArray(orders.status, ["Completed", "Delivered", "Cancelled"])
+        )
+      )
+      .orderBy(desc(orders.createdAt));
 
-    if (handleEmptyResult(result, res, "No order history yet.")) return;
+    if (activeOrders.length === 0) {
+      res.status(200).json({ success: true, orders: [] });
+      return;
+    }
 
-    console.log("order history: ", result);
-    res.status(200).json({ success: true, orderHistory: result })
-    return;
+    // 2. Fetch all orderItems for these orders
+    const orderIds = activeOrders.map(order => order.id);
+
+    // This query selects all items belonging to the customer's orders.
+    // It gets details from the 'order_items' table and joins with the 'products' table
+    // to also fetch the product name (instead of just product IDs).
+    // We use 'inArray' to only fetch order items for the customer's specific orders.
+    // This helps the customer easily view their order details including product names, quantity, size, and price.
+    const orderItemsData = await db.select({
+      orderId: orderItems.orderId,
+      productId: orderItems.productId,
+      quantity: orderItems.quantity,
+      price: orderItems.price,
+      size: orderItems.size,
+      productName: products.name, // join products table
+      productImage: products.imageUrl
+    })
+      .from(orderItems)
+      .innerJoin(products, eq(orderItems.productId, products.id))
+      .where(inArray(orderItems.orderId, orderIds));
+
+    // 3. Group items under each order
+    const ordersWithItems = activeOrders.map(order => ({
+      ...order,
+      items: orderItemsData.filter(item => item.orderId === order.id)
+    }));
+
+    res.status(200).json({ success: true, orders: ordersWithItems });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
+    res.status(500).json({ success: false, message: "Internal server error", error });
   }
 }

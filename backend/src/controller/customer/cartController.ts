@@ -87,7 +87,7 @@ export async function updateCartProduct(req: Request, res: Response): Promise<vo
   if (validateRequiredFields(res, [cartProductId, quantity, size])) return;
 
   const parsedId = Number(cartProductId);
-  if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
+  if (isNotANumber(parsedId, res)) return; // Stop execution if invalid 
 
   try {
     const result = await db.update(cartItems).set({ quantity, size }).where(eq(cartItems.id, parsedId)).returning();
