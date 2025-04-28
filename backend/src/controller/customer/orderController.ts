@@ -7,11 +7,11 @@ import { cartItems, orderItems, orders, products } from "../../db/schema";
 import handleEmptyResult from "../../utils/handleEmptyResult";
 
 
-export async function checkOutProduct(req: Request, res: Response): Promise<void> {
+export async function placeOrderProduct(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
-  const { selectedCartProductIds } = req.body;
+  const { selectedCartProductIds, paymentMethod, message } = req.body;
 
-  if (validateRequiredFields(res, [customerId, selectedCartProductIds])) return;
+  if (validateRequiredFields(res, [customerId, selectedCartProductIds, paymentMethod, message])) return;
 
   const parsedId = Number(customerId);
   if (isNotANumber(parsedId, res)) return;
@@ -44,6 +44,8 @@ export async function checkOutProduct(req: Request, res: Response): Promise<void
       userId: parsedId,
       totalAmount: totalAmount.toString(),  // convert totalAmount to string because decimal expects it
       status: "Pending",
+      paymentMethod,
+      message,
       createdAt: new Date(),
       updatedAt: new Date(),
     }).returning();
@@ -89,7 +91,7 @@ export async function getActiveOrder(req: Request, res: Response): Promise<void>
       .where(
         and(
           eq(orders.userId, parsedId),
-          inArray(orders.status, ["Pending", "Preparing"])
+          inArray(orders.status, ["Pending", "Preparing", "Delivering"])
         )
       )
       .orderBy(desc(orders.createdAt));
@@ -146,7 +148,7 @@ export async function getOrderHistory(req: Request, res: Response): Promise<void
       .where(
         and(
           eq(orders.userId, parsedId),
-          inArray(orders.status, ["Completed", "Delivered", "Cancelled"])
+          inArray(orders.status, ["Delivered", "Completed", "Cancelled"])
         )
       )
       .orderBy(desc(orders.createdAt));

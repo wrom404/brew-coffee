@@ -38,7 +38,10 @@ export const orders = pgTable("orders", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(),
-  status: text("status").notNull(), // example: Pending, Preparing, Completed, Cancelled
+  status: text("status").notNull(), // example: Pending, Preparing, delivering, Delivered, Completed, Cancelled
+  paymentMethod: varchar('payment_method', { length: 50 }).notNull(),
+  payment: decimal("payment", { precision: 10, scale: 2 }),
+  message: text("message"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });

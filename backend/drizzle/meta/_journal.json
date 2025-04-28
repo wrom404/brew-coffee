@@ -71,6 +71,13 @@
       "when": 1745738722592,
       "tag": "0009_past_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1745850668773,
+      "tag": "0010_absent_thaddeus_ross",
+      "breakpoints": true
     }
   ]
 }

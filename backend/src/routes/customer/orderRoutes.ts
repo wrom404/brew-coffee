@@ -1,12 +1,12 @@
 import express from "express";
 import authMiddleware from "../../middleware/auth/authMiddleware";
-import { checkOutProduct, getActiveOrder, getOrderHistory } from "../../controller/customer/orderController";
+import { placeOrderProduct, getActiveOrder, getOrderHistory } from "../../controller/customer/orderController";
 
 const routes = express.Router();
 
 routes.use(authMiddleware)
 
-routes.post("/:customerId", checkOutProduct);
+routes.post("/:customerId", placeOrderProduct);
 
 routes.get("/:customerId", getActiveOrder);
 
