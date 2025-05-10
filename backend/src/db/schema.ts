@@ -33,7 +33,7 @@ export const cartItems = pgTable('cart_items', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
-
+// orders Table: This table represents a single, complete transaction or purchase made by a user. It contains information that is relevant to the entire order as a whole. Think of it as the "receipt" or the "header" of the purchase.
 export const orders = pgTable("orders", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -46,6 +46,7 @@ export const orders = pgTable("orders", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
+// order_items Table: This table represents the individual products that were included within a specific order. An order can contain multiple items, each with its own details. Think of these as the individual lines on the receipt.
 export const orderItems = pgTable("order_items", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   orderId: integer("order_id").notNull().references(() => orders.id, { onDelete: "cascade" }),
