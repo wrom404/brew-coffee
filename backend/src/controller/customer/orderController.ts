@@ -5,7 +5,6 @@ import validateRequiredFields from "../../utils/validateRequiredFields";
 import isNotANumber from "../../utils/isNotANumber";
 import { cartItems, orderItems, orders, products } from "../../db/schema";
 import handleEmptyResult from "../../utils/handleEmptyResult";
-import { type OrderedProductType } from "../../types/customer-product/types";
 
 export async function placeOrderProduct(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
@@ -27,7 +26,7 @@ export async function placeOrderProduct(req: Request, res: Response): Promise<vo
 
   try {
     let newOrderId: number | null = null;
-    let orderedProducts: OrderedProductType[] = [];
+    let orderedProducts: typeof cartItems.$inferSelect[] = [];
 
     await db.transaction(async (tx) => {
       const selectedProducts = await tx.select()
@@ -99,7 +98,7 @@ export async function placeOrderProduct(req: Request, res: Response): Promise<vo
     })
 
     if (!newOrderId) {
-      res.status(400).json({ success: false, message: "Order creation failed" })
+      res.status(400).json({ success: false, message: "Failed to place order." })
       return;
     }
 

@@ -89,10 +89,16 @@ export async function deleteProduct(req: Request, res: Response): Promise<void> 
     const queryProduct = await db.select().from(products).where(eq(products.id, parseId))
     if (handleEmptyResult(queryProduct, res, "No product found.")) return;
 
-    deletePhoto(queryProduct[0].imageUrl || "");
+    const deletedProduct = await db.transaction(async (tx) => {
+      return await tx.delete(products).where(eq(products.id, parseId)).returning();
+    })
 
-    const deletedProduct = await db.delete(products).where(eq(products.id, parseId)).returning();
-    if (handleEmptyResult(deletedProduct, res, "Failed to delete product.")) return;
+    if (deletedProduct.length === 0) {
+      res.status(400).json({ success: false, message: "Failed to delete product, product id is invalid." })
+      return;
+    }
+
+    deletePhoto(queryProduct[0].imageUrl || "");
 
     res.status(200).json({ success: true, deletedProduct, message: "Product successfully deleted" })
     return;
@@ -116,12 +122,29 @@ export async function updateProduct(req: Request, res: Response): Promise<void> 
     const queryProduct = await db.select().from(products).where(eq(products.id, parseId));
     if (handleEmptyResult(queryProduct, res, "No product found.")) return;
 
-    deletePhoto(queryProduct[0].imageUrl || "")
+    // Only delete the old photo if a new one is uploaded
+    if (imageUrl) {
+      deletePhoto(queryProduct[0].imageUrl || "")
+    }
+
+    // Only include imageUrl if it's not null
+    // Partial<typeof table.$inferInsert>  → insert type but all fields optional (used for updates)
+    const updatedData: Partial<typeof products.$inferInsert> = {
+      name,
+      description,
+      price,
+      stockQuantity,
+    };
+
+    if (imageUrl) {
+      updatedData.imageUrl = imageUrl;
+    }
 
     const result = await db.update(products).set({ name, description, price, imageUrl, stockQuantity }).where(eq(products.id, parseId)).returning();
     if (handleEmptyResult(result, res, "Failed to update product.")) return;
 
     res.status(200).json({ success: true, updatedProduct: result, message: "Product updated successfully." })
+    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
     return;
