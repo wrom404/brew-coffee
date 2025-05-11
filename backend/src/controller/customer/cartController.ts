@@ -68,9 +68,14 @@ export async function deleteProductCart(req: Request, res: Response): Promise<vo
   if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
-    const result = await db.delete(cartItems).where(eq(cartItems.id, parsedId)).returning();
+    const result: typeof cartItems.$inferSelect[] = await db.transaction(async (tx) => {
+      return await tx.delete(cartItems).where(eq(cartItems.id, parsedId)).returning();
+    });
 
-    if (handleEmptyResult(result, res, "Failed to delete product in cart.")) return;
+    if (result.length === 0) {
+      res.status(400).json({ success: false, message: "failed to delete user." })
+      return;
+    }
 
     res.status(200).json({ success: true, deletedCartProduct: result, message: "Deleted successfully." })
     return;

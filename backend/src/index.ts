@@ -9,6 +9,7 @@ import authUserRoutes from "./routes/auth/authRoutes";
 
 import adminProductRoutes from "./routes/admin/productRoutes";
 import adminCustomerRoutes from "./routes/admin/customerRoutes"
+import adminOrderRoutes from "./routes/admin/orderRoutes"
 
 import customerProductRoutes from "./routes/customer/productRoutes";
 import customerCartRoutes from "./routes/customer/cartRoutes"
@@ -38,6 +39,7 @@ app.use('/api/customer/order', customerOrderRoutes) // on-going task
 // admin routes 
 app.use('/api/admin/product', adminProductRoutes)
 app.use('/api/admin/customer', adminCustomerRoutes)
+app.use('/api/admin/order', adminOrderRoutes)
 
 // 404 "not found" routes
 app.use(notFoundRoute)

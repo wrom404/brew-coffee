@@ -20,7 +20,7 @@ export async function placeOrderProduct(req: Request, res: Response): Promise<vo
     return;
   }
   if (!selectedCartProductIds.every((id: any) => typeof id === 'number')) {
-    res.status(400).json({ success: false, message: "Cart product IDs must be numbers." });
+    res.status(400).json({ success: false, message: "Cart product ID must be numbers." });
     return;
   }
 
@@ -37,8 +37,6 @@ export async function placeOrderProduct(req: Request, res: Response): Promise<vo
             inArray(cartItems.id, selectedCartProductIds) // match the cart id from the selectedCartProductIds (array of product id from cart)
           )
         );
-
-      console.log("selectedProducts: ", selectedProducts)
 
       if (handleEmptyResult(selectedProducts, res)) return;
 
@@ -168,7 +166,6 @@ export async function getActiveOrder(req: Request, res: Response): Promise<void>
     res.status(500).json({ success: false, message: "Internal server error", error });
   }
 }
-
 
 export async function getOrderHistory(req: Request, res: Response): Promise<void> {
   const { customerId } = req.params;
