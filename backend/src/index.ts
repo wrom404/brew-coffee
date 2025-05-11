@@ -15,6 +15,7 @@ import customerProductRoutes from "./routes/customer/productRoutes";
 import customerCartRoutes from "./routes/customer/cartRoutes"
 import customerProfileRoutes from "./routes/customer/profileRoutes"
 import customerOrderRoutes from "./routes/customer/orderRoutes"
+import customerFavoriteRoutes from "./routes/customer/favoriteRoutes";
 
 dotenv.config()
 const app: Express = express();
@@ -34,7 +35,8 @@ app.use('/api/auth', authUserRoutes)
 app.use('/api/customer/product', customerProductRoutes)
 app.use('/api/customer/cart', customerCartRoutes)
 app.use('/api/customer/profile', customerProfileRoutes)
-app.use('/api/customer/order', customerOrderRoutes) // on-going task
+app.use('/api/customer/order', customerOrderRoutes)
+app.use('/api/customer/favorite', customerFavoriteRoutes)
 
 // admin routes 
 app.use('/api/admin/product', adminProductRoutes)

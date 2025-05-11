@@ -78,6 +78,13 @@
       "when": 1745850668773,
       "tag": "0010_absent_thaddeus_ross",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1746952079093,
+      "tag": "0011_parched_master_chief",
+      "breakpoints": true
     }
   ]
 }
