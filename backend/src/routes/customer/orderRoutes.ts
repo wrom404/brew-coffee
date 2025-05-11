@@ -12,6 +12,8 @@ routes.get("/:customerId", getActiveOrder);
 
 routes.get("/:customerId/history", getOrderHistory);
 
+routes.patch("/customerId", )
+
 export default routes;
 
 // View customer order history ✅

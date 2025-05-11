@@ -107,6 +107,33 @@ export async function placeOrderProduct(req: Request, res: Response) {
   }
 }
 
+export async function cancelOrder(req: Request, res: Response) {
+  const { customerId } = req.params;
+  const { orderId } = req.body;
+
+  if (validateRequiredFields(res, [customerId, orderId])) return;
+
+  const parsedCustomerId = Number(customerId);
+  const parsedOrderId = Number(orderId);
+  if (isNotANumber(parsedCustomerId, res)) return;
+  if (isNotANumber(parsedOrderId, res)) return;
+
+  try {
+    const result = await db.transaction(async (tx) => {
+      return await tx.update(orders).set({ status: "Canceled" }).where(and(eq(orders.userId, parsedCustomerId), eq(orders.id, parsedOrderId))).returning()
+    })
+
+    if (result.length === 0) {
+      res.status(404).json({ success: false, message: "Order not found or does not belong to this customer." })
+      return;
+    }
+
+    res.status(200).json({ success: true, canceledOrder: result[0], message: "Order canceled successfully." })
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error", error });
+  }
+}
+
 export async function getActiveOrder(req: Request, res: Response) {
   const { customerId } = req.params;
 
