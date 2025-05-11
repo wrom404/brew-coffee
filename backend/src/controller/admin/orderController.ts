@@ -5,24 +5,21 @@ import handleEmptyResult from "../../utils/handleEmptyResult";
 import isNotANumber from "../../utils/isNotANumber";
 import { eq } from "drizzle-orm";
 
-export async function getAllOrder(req: Request, res: Response): Promise<void> {
-
+export async function getAllOrder(req: Request, res: Response) {
   try {
     const result = await db.select().from(orders);
 
     if (handleEmptyResult(result, res)) return;
 
     res.status(200).json({ success: true, allOrders: result })
-    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
   }
 }
 
 // PATCH /orders/:orderId/status
 
-export async function updateOrderStatus(req: Request, res: Response): Promise<void> {
+export async function updateOrderStatus(req: Request, res: Response) {
   const { orderId } = req.params;
   const { status } = req.body;
 
@@ -47,9 +44,7 @@ export async function updateOrderStatus(req: Request, res: Response): Promise<vo
     }
 
     res.status(200).json({ success: true, updatedOrder: result[0], message: "Order status updated" });
-    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error });
-    return;
   }
 }

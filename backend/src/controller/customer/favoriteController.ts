@@ -52,8 +52,6 @@ export async function removeFavorite(req: Request, res: Response) {
         .returning();
     })
 
-    console.log("result: ", result)
-
     if (result.length === 0) {
       res.status(404).json({ success: false, message: "Favorite not found" });
       return;
@@ -85,7 +83,6 @@ export async function getUserFavorites(req: Request, res: Response) {
       .where(eq(favorites.userId, Number(parsedId)))
       .leftJoin(products, eq(favorites.productId, products.id));
 
-    console.log("result: ", result)
     if (result.length === 0) {
       res.status(200).json({
         success: true,

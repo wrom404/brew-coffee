@@ -6,7 +6,7 @@ import isNotANumber from "../../utils/isNotANumber";
 import handleEmptyResult from "../../utils/handleEmptyResult";
 import validateRequiredFields from "../../utils/validateRequiredFields";
 
-export async function addToCart(req: Request, res: Response): Promise<void> {
+export async function addToCart(req: Request, res: Response) {
   const { customerId } = req.params;
   const { productId, quantity, size } = req.body;
 
@@ -31,14 +31,12 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
     console.log("result: ", result[0]);
 
     res.status(200).json({ success: true, product: result[0] })
-    return;
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error. " })
-    return;
   }
 }
 
-export async function getAllProductCart(req: Request, res: Response): Promise<void> {
+export async function getAllProductCart(req: Request, res: Response) {
   const { customerId } = req.params;
 
   if (validateRequiredFields(res, [customerId], "Invalid, customer id is null.")) return;
@@ -52,14 +50,12 @@ export async function getAllProductCart(req: Request, res: Response): Promise<vo
     if (handleEmptyResult(result, res, "Cart is empty.")) return;
 
     res.status(200).json({ success: true, cartProduct: result });
-    return;
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error." })
-    return;
   }
 }
 
-export async function deleteProductCart(req: Request, res: Response): Promise<void> {
+export async function deleteProductCart(req: Request, res: Response) {
   const { cartProductId } = req.params;
 
   if (validateRequiredFields(res, [cartProductId], "Invalid, product id is null.")) return;
@@ -78,14 +74,12 @@ export async function deleteProductCart(req: Request, res: Response): Promise<vo
     }
 
     res.status(200).json({ success: true, deletedCartProduct: result, message: "Deleted successfully." })
-    return;
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error." })
-    return;
   }
 }
 
-export async function updateCartProduct(req: Request, res: Response): Promise<void> {
+export async function updateCartProduct(req: Request, res: Response) {
   const { cartProductId } = req.params;
   const { quantity, size } = req.body;
 
@@ -100,10 +94,8 @@ export async function updateCartProduct(req: Request, res: Response): Promise<vo
     if (handleEmptyResult(result, res, "Failed to update product in cart.")) return;
 
     res.status(200).json({ success: true, updatedCartProduct: result, message: "Updated successfully." })
-    return;
   } catch (error) {
     res.status(500).json({ error, message: "Internal server error." })
-    return;
   }
 }
 

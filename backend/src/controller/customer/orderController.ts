@@ -6,7 +6,7 @@ import isNotANumber from "../../utils/isNotANumber";
 import { cartItems, orderItems, orders, products } from "../../db/schema";
 import handleEmptyResult from "../../utils/handleEmptyResult";
 
-export async function placeOrderProduct(req: Request, res: Response): Promise<void> {
+export async function placeOrderProduct(req: Request, res: Response) {
   const { customerId } = req.params;
   const { selectedCartProductIds, paymentMethod, message } = req.body;
 
@@ -102,14 +102,12 @@ export async function placeOrderProduct(req: Request, res: Response): Promise<vo
 
     // 6. Respond success
     res.status(201).json({ success: true, message: "Order placed successfully.", orderId: newOrderId, orderedProducts });
-    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
   }
 }
 
-export async function getActiveOrder(req: Request, res: Response): Promise<void> {
+export async function getActiveOrder(req: Request, res: Response) {
   const { customerId } = req.params;
 
   if (validateRequiredFields(res, [customerId])) return;
@@ -167,7 +165,7 @@ export async function getActiveOrder(req: Request, res: Response): Promise<void>
   }
 }
 
-export async function getOrderHistory(req: Request, res: Response): Promise<void> {
+export async function getOrderHistory(req: Request, res: Response) {
   const { customerId } = req.params;
 
   const parsedId = Number(customerId);

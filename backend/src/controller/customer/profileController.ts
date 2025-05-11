@@ -8,7 +8,7 @@ import handleEmptyResult from "../../utils/handleEmptyResult";
 import hashPassword from "../../utils/hashPassword";
 import validatePassword from "../../utils/validatePassword";
 
-export async function getUserProfile(req: Request, res: Response): Promise<void> {
+export async function getUserProfile(req: Request, res: Response) {
   const { customerId } = req.params;
 
   if (validateRequiredFields(res, [customerId], "Invalid, customer id is null.")) return;
@@ -22,14 +22,12 @@ export async function getUserProfile(req: Request, res: Response): Promise<void>
 
     console.log("User: ", result);
     res.status(200).json({ success: true, user: result });
-    return;
   } catch (error) {
     res.status(500).json({ success: false, error, message: "Internal server error." });
-    return;
   }
 }
 
-export async function updateCustomerProfile(req: Request, res: Response): Promise<void> {
+export async function updateCustomerProfile(req: Request, res: Response) {
   const { customerId } = req.params;
   const { name, email, password } = req.body
 
@@ -56,9 +54,7 @@ export async function updateCustomerProfile(req: Request, res: Response): Promis
     const result = await db.update(users).set({ name, email, password: passwordToSave }).where(eq(users.id, parsedId)).returning();
 
     res.status(200).json({ success: true, user: result[0], message: "Profile updated successfully." });
-    return;
   } catch (error) {
     res.status(500).json({ success: false, error, message: "Internal server error." });
-    return;
   }
 }

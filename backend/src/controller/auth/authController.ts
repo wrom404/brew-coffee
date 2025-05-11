@@ -9,7 +9,7 @@ import validateRequiredFields from "../../utils/validateRequiredFields";
 import handleEmptyResult from "../../utils/handleEmptyResult";
 
 // Latest task: Continue using the reusable function validateRequiredFields, isNotANumber and handleEmptyResult
-export async function signupUser(req: Request, res: Response): Promise<void> {
+export async function signupUser(req: Request, res: Response) {
   const { name, email, password } = req.body
 
   if (validateRequiredFields(res, [name, email, password])) return; // Stop execution if required fields are empty
@@ -28,14 +28,12 @@ export async function signupUser(req: Request, res: Response): Promise<void> {
     if (handleEmptyResult(result, res, "Failed to signup user.")) return;
 
     res.status(201).json({ success: true, newUser: result, message: "User created successfully" })
-    return;
   } catch (error) {
     res.status(400).json({ success: false, error })
-    return;
   }
 }
 
-export async function loginUser(req: Request, res: Response): Promise<void> {
+export async function loginUser(req: Request, res: Response) {
   const { email, password } = req.body
 
   if (validateRequiredFields(res, [email, password])) return;
@@ -56,15 +54,13 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
     generateToken(fetchedUser.id, fetchedUser.role as string, res)
 
     res.status(201).json({ success: true, message: "Login successfully." })
-    return;
   } catch (error) {
     res.status(400).json({ success: false, error })
-    return;
+
   }
 }
 
-export async function logoutUser(req: Request, res: Response): Promise<void> {
+export async function logoutUser(req: Request, res: Response) {
   res.clearCookie("token");
   res.status(200).json({ success: true, message: "Logout successfully." })
-  return;
 }

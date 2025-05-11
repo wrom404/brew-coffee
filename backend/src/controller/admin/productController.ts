@@ -9,7 +9,7 @@ import validateRequiredFields from "../../utils/validateRequiredFields";
 import handleEmptyResult from "../../utils/handleEmptyResult";
 import isNotANumber from "../../utils/isNotANumber";
 
-export async function createProduct(req: Request, res: Response): Promise<void> {
+export async function createProduct(req: Request, res: Response) {
   const { name, description, price, stockQuantity } = req.body;
   const imageUrl = req.file ? `../../uploads/products${req.file.filename}` : null;
 
@@ -20,15 +20,13 @@ export async function createProduct(req: Request, res: Response): Promise<void> 
     if (handleEmptyResult(newProduct, res, "Failed to create product.")) return;
 
     res.status(201).json({ success: true, data: newProduct });
-    return;
   } catch (error) {
     console.error("Error creating product:", error);
     res.status(500).json({ success: false, message: "Internal server error.", error });
-    return;
   }
 }
 
-export async function getAllProducts(req: Request, res: Response): Promise<void> {
+export async function getAllProducts(req: Request, res: Response) {
   // try {
   //   const uploadDir = path.join(__dirname, "../../uploads/products"); // Correct path
 
@@ -50,14 +48,12 @@ export async function getAllProducts(req: Request, res: Response): Promise<void>
     if (handleEmptyResult(queryProducts, res, "no products found.")) return;
 
     res.status(200).json({ success: true, products: queryProducts })
-    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
   }
 }
 
-export async function getProductById(req: Request, res: Response): Promise<void> {
+export async function getProductById(req: Request, res: Response) {
   const { productId } = req.params;
 
   if (validateRequiredFields(res, [productId], "Product ID is required and must be valid.")) return;
@@ -70,14 +66,12 @@ export async function getProductById(req: Request, res: Response): Promise<void>
     if (handleEmptyResult(queryProduct, res, "No product found.")) return;
 
     res.status(200).json({ success: true, product: queryProduct })
-    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
   }
 }
 
-export async function deleteProduct(req: Request, res: Response): Promise<void> {
+export async function deleteProduct(req: Request, res: Response) {
   const { productId } = req.params;
 
   if (validateRequiredFields(res, [productId], "Product ID is required and must be valid.")) return;
@@ -101,14 +95,12 @@ export async function deleteProduct(req: Request, res: Response): Promise<void> 
     deletePhoto(queryProduct[0].imageUrl || "");
 
     res.status(200).json({ success: true, deletedProduct, message: "Product successfully deleted" })
-    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
   }
 }
 
-export async function updateProduct(req: Request, res: Response): Promise<void> {
+export async function updateProduct(req: Request, res: Response) {
   const { productId } = req.params;
   const { name, description, price, stockQuantity } = req.body;
   const imageUrl = req.file ? `../../uploads/products${req.file.filename}` : null;
@@ -144,10 +136,8 @@ export async function updateProduct(req: Request, res: Response): Promise<void> 
     if (handleEmptyResult(result, res, "Failed to update product.")) return;
 
     res.status(200).json({ success: true, updatedProduct: result, message: "Product updated successfully." })
-    return;
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
   }
 }
 
