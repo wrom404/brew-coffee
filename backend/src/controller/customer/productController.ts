@@ -9,7 +9,7 @@ import isNotANumber from "../../utils/isNotANumber";
 export async function getAllProducts(req: Request, res: Response) {
   try {
     const result = await db.select().from(products);
-    if (handleEmptyResult(result, res, "No products found.")) return;
+    if (handleEmptyResult(result, res, "No products found.", 200, true)) return;
 
     res.status(200).json({ success: true, products: result })
   } catch (error) {
@@ -28,7 +28,7 @@ export async function getProductById(req: Request, res: Response): Promise<void>
   try {
     const result = await db.select().from(products).where(eq(products.id, parsedId))
 
-    if (handleEmptyResult(result, res, "Product not found.")) return;
+    if (handleEmptyResult(result, res, "Product not found.", 200, true)) return;
 
     res.status(200).json({ success: true, product: result })
   } catch (error) {

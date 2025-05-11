@@ -155,7 +155,7 @@ export async function getActiveOrder(req: Request, res: Response) {
       .orderBy(desc(orders.createdAt));
 
     if (activeOrders.length === 0) {
-      res.status(200).json({ success: true, orders: [] });
+      res.status(200).json({ success: true, orders: [], message: "No active order." });
       return;
     }
 
@@ -211,7 +211,7 @@ export async function getOrderHistory(req: Request, res: Response) {
       .orderBy(desc(orders.createdAt));
 
     if (activeOrders.length === 0) {
-      res.status(200).json({ success: true, orders: [] });
+      res.status(200).json({ success: true, orders: [], message: "No order history." });
       return;
     }
 

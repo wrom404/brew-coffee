@@ -88,7 +88,7 @@ export async function deleteProduct(req: Request, res: Response) {
     })
 
     if (deletedProduct.length === 0) {
-      res.status(400).json({ success: false, message: "Failed to delete product, product id is invalid." })
+      res.status(404).json({ success: false, message: "Failed to delete product, product id is invalid." })
       return;
     }
 

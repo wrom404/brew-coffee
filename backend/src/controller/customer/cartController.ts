@@ -47,7 +47,7 @@ export async function getAllProductCart(req: Request, res: Response) {
   try {
     const result = await db.select().from(cartItems).where(eq(cartItems.userId, parsedId))
 
-    if (handleEmptyResult(result, res, "Cart is empty.")) return;
+    if (handleEmptyResult(result, res, "Cart is empty.", 200, true)) return;
 
     res.status(200).json({ success: true, cartProduct: result });
   } catch (error) {
@@ -69,7 +69,7 @@ export async function deleteProductCart(req: Request, res: Response) {
     });
 
     if (result.length === 0) {
-      res.status(400).json({ success: false, message: "failed to delete user." })
+      res.status(404).json({ success: false, message: "failed to delete user or user not found." })
       return;
     }
 

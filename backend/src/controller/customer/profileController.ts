@@ -20,7 +20,6 @@ export async function getUserProfile(req: Request, res: Response) {
     const result = await db.select().from(users).where(eq(users.id, parsedId));
     if (handleEmptyResult(result, res, "No user found.")) return;
 
-    console.log("User: ", result);
     res.status(200).json({ success: true, user: result });
   } catch (error) {
     res.status(500).json({ success: false, error, message: "Internal server error." });
