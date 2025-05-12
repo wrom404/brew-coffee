@@ -12,8 +12,8 @@ const Page = () => {
       <Header />
       <Home />
       <Featured />
-      <About />
       <Menu />
+      <About />
       <Contact />
       <Footer />
     </div>

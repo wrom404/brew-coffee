@@ -77,7 +77,7 @@ export async function getUserFavorites(req: Request, res: Response) {
       .select({
         id: favorites.id,
         productId: favorites.productId,
-        productDetails: products.description,
+        productDetails: products,
       })
       .from(favorites)
       .where(eq(favorites.userId, Number(parsedId)))

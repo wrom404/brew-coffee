@@ -1,67 +1,83 @@
-import { CiHeart } from "react-icons/ci";
-import { GoPlus } from "react-icons/go";
-import { ProductCardType } from "@/types/types";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { CoffeeProduct } from "@/types/types";
+import { Heart, ShoppingCart } from "lucide-react";
+import { useState } from "react";
 
-const ProductCard = ({
-  product,
-  setIsModalOpen = () => {},
-  isModalOpen,
-  setImageName = () => {},
-}: ProductCardType) => {
-  const handleClick = (imageName: string) => {
-    setImageName(imageName);
-    setIsModalOpen(!isModalOpen);
+const ProductCard: React.FC<{
+  coffee: CoffeeProduct;
+  onAddToCart: (coffee: CoffeeProduct) => void;
+  onAddToFavorites: (coffee: CoffeeProduct) => void;
+  isFavorite?: boolean;
+}> = ({ coffee, onAddToCart, onAddToFavorites, isFavorite = false }) => {
+  const [favorite, setFavorite] = useState(isFavorite);
+
+  // Function to handle favorite toggle
+  const handleFavoriteToggle = () => {
+    const newFavoriteState = !favorite;
+    setFavorite(newFavoriteState);
+    onAddToFavorites(coffee);
   };
 
-  console.log("image name:" + product.image);
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }} // Start slightly lower
-      whileInView={{ opacity: 1, y: 0 }} // Move up smoothly
-      transition={{
-        duration: 0.4,
-        ease: "easeInOut",
-        delay: product.id * 0.05,
-      }} // Faster animation
-      viewport={{ amount: 0.1, once: true }} // Triggers when 30% of the card is visible
-    >
-      <Card className="bg-(--secondary-color) text-gray-200 border-none rounded-none rounded-br-4xl rounded-tl-4xl">
-        <div
-          onClick={() => handleClick(product.image)}
-          className="w-60 overflow-hidden rounded-tl-4xl"
+    <div className="bg-amber-50 shadow-md rounded-lg overflow-hidden w-full max-w-xs mx-auto transform transition-all duration-300 hover:shadow-lg">
+      {/* Coffee Image */}
+      <div className="relative h-48 w-full">
+        <img
+          src={coffee.imageUrl}
+          alt={coffee.name}
+          className="w-full h-full object-cover"
+        />
+
+        {/* Favorite Button */}
+        <button
+          onClick={handleFavoriteToggle}
+          className={`absolute top-3 right-3 p-2 rounded-full transition-colors duration-300 cursor-pointer ${
+            favorite
+              ? "bg-amber-600 text-white"
+              : "bg-white/70 text-amber-800 hover:bg-red-100"
+          }`}
         >
-          <img
-            className="rounded-tl-xl hover:scale-105 transition-transform cursor-pointer"
-            src={product.image}
-            alt="img"
+          <Heart
+            className={`w-5 h-5 transition-all duration-300 ${
+              favorite ? "fill-current" : "hover:fill-amber-600"
+            }`}
           />
+        </button>
+      </div>
+
+      {/* Coffee Details */}
+      <div className="p-4">
+        {/* Category */}
+        <span className="text-xs uppercase tracking-wider text-amber-600 font-semibold">
+          {coffee.category}
+        </span>
+
+        {/* Name */}
+        <h3 className="text-lg font-bold text-gray-800 mt-1 truncate">
+          {coffee.name}
+        </h3>
+
+        {/* Description (Truncated) */}
+        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+          {coffee.description}
+        </p>
+
+        {/* Price and Cart Button */}
+        <div className="mt-3 flex justify-between items-center">
+          <span className="text-xl font-bold text-amber-700">
+            ${coffee.price.toFixed(2)}
+          </span>
+
+          {/* Add to Cart Button */}
+          <button
+            onClick={() => onAddToCart(coffee)}
+            className="flex items-center gap-1 bg-amber-600 text-white px-3 py-1.5 rounded-full hover:bg-amber-700 transition-colors text-sm cursor-pointer"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Add
+          </button>
         </div>
-        <CardHeader>
-          <CardTitle className="tracking-wide">{product.name}</CardTitle>
-          <CardDescription className="text-xl text-(--quaternary-color)">
-            {product.price}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-end gap-3">
-          <CiHeart
-            className="cursor-pointer hover:scale-125 hover:text-(--fifth-color) transition-transform"
-            size={24}
-          />
-          <GoPlus
-            className="cursor-pointer hover:scale-125 hover:text-(--fifth-color) transition-transform"
-            size={24}
-          />
-        </CardContent>
-      </Card>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

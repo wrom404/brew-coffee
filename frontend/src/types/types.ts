@@ -27,3 +27,23 @@ export type CoordinatesType = {
   lat: number;
   lng: number;
 };
+
+export interface Coffee {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  badge?: string;
+}
+
+// TypeScript interface for Coffee Product
+export interface CoffeeProduct {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+}

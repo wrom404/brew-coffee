@@ -1,92 +1,107 @@
 import { CiUser, CiSearch, CiShoppingCart } from "react-icons/ci";
 import { MdOutlineLightMode } from "react-icons/md";
-import { useState, useRef } from "react";
-// import { useLocation } from "react-router";
-
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
+import { useState, useRef, useEffect } from "react";
+import { Coffee } from "lucide-react";
 
 type ElementType = HTMLInputElement;
 
 const Header = () => {
   const [isSearchIconShow, setIsSearchIconShow] = useState<boolean>(true);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const refSearch = useRef<ElementType>(null);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const iconClass = `cursor-pointer transition hover:text-[var(--quaternary-color)] ${
+    isScrolled ? "text-[#4E342E]" : "text-gray-300"
+  }`;
+
   return (
-    <div className="py-3 px-6 flex justify-between items-center text-gray-100 border-b border-(--secondary-color) fixed w-full backdrop-blur-xs">
-      <div className="text-lg"><h2 className="title-header">kofe-latte'</h2></div>
-      <div className="flex gap-20">
-        <div className="">
-          <ul className="flex items-center gap-6 text-gray-100 text-lg cursor-pointer">
-            <li className="hover:text-(--quaternary-color)"><a href="#home">Home</a></li>
-            <li>
-            <li className="hover:text-(--quaternary-color)"><a href="#feature">Feature</a></li>
-              {/* <DropdownMenu>
-                <DropdownMenuTrigger className="outline-none cursor-pointer hover:text-(--quaternary-color)">
-                  Category
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="z-10 bg-white border-gray-300">
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="hover:bg-gray-100 hover:text-(--tertiary-color)">
-                    Espresso
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-gray-100 hover:text-(--tertiary-color)">
-                    Americano
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-gray-100 hover:text-(--tertiary-color)">
-                    Cappuccino
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-gray-100 hover:text-(--tertiary-color)">
-                    Caffè macchiato
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-gray-100 hover:text-(--tertiary-color)">
-                    Nescafe Classic
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu> */}
-            </li>
-            <li className="hover:text-(--quaternary-color)"><a href="#about">About Us</a></li>
-            <li className="hover:text-(--quaternary-color)"><a href="#menu">Menu</a></li>
-            <li className="hover:text-(--quaternary-color)"><a href="#contact">Contact</a></li>
-          </ul>
+    <header
+      className={`fixed w-full z-50 flex justify-between items-center transition-all duration-300 backdrop-blur-md px-16 ${
+        isScrolled
+          ? "bg-white bg-opacity-95 shadow-sm text-[#4E342E] py-4"
+          : "bg-transparent py-6"
+      }`}
+    >
+      {/* Logo */}
+      <div className="flex  justify-between w-full mr-8">
+        <div
+          className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${
+            isScrolled ? "text-amber-900" : "text-gray-50"
+          }`}
+        >
+          <Coffee className="" /> brew kofe'
         </div>
-        <div className="flex gap-8">
-          <div className="relative">
-            {isSearchIconShow && (
-              <div className="absolute top-1 left-3">
-                <CiSearch className="inline text-gray-50" size={20} />
-              </div>
+
+        {/* Navigation and Icons */}
+        {/* Navigation Links */}
+        <ul
+          className={`hidden md:flex items-center gap-6 text-lg transition-colors ${
+            isScrolled ? "text-[#4E342E]" : "text-gray-100"
+          }`}
+        >
+          {["Home", "Feature", "About Us", "Menu", "Contact"].map((label) => (
+            <li key={label}>
+              <a
+                href={`#${label.toLowerCase().replace(" ", "")}`}
+                className="relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left"
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex gap-12 items-center">
+        {/* Search & Icons */}
+        <div className="flex items-center gap-4">
+          <div className="relative w-64 h-[35px]">
+            {!isSearchIconShow ? (
+              <input
+                ref={refSearch}
+                onFocus={() => setIsSearchIconShow(false)}
+                onBlur={() => setIsSearchIconShow(true)}
+                type="text"
+                placeholder="Search..."
+                className={`transition-all duration-300 border absolute top-0 right-0 ${
+                  isScrolled
+                    ? "border-[#4E342E] focus:ring-[#4E342E]"
+                    : " border-gray-400 text-gray-200"
+                } rounded-lg outline-none focus:ring w-64 py-1 px-4`}
+              />
+            ) : (
+              <CiSearch
+                className={`${
+                  isScrolled ? "text-[#4E342E]" : "text-gray-50"
+                } cursor-pointer hover:text-[var(--quaternary-color)] transition absolute right-0 top-1/2 -translate-y-1/2`}
+                size={24}
+                onClick={() => setIsSearchIconShow(false)}
+              />
             )}
-            <input
-              ref={refSearch}
-              onFocus={() => setIsSearchIconShow(false)}
-              onBlur={() => setIsSearchIconShow(true)}
-              type="text"
-              className="border border-[#4E342E] rounded-lg outline-none focus:outline-[#4E342E] focus:ring focus:ring-[#4E342E] w-80 p-1.5 px-4 z-10"
-            />
           </div>
-          <div className="flex items-center gap-3">
-            <CiShoppingCart
-              size={28}
-              className="text-gray-300 cursor-pointer hover:text-(--quaternary-color)"
-            />
-            <CiUser
-              size={28}
-              className="text-gray-300 cursor-pointer hover:text-(--quaternary-color)"
-            />
-            <MdOutlineLightMode
-              size={28}
-              className="text-gray-300 cursor-pointer hover:text-(--quaternary-color)"
-            />
-          </div>
+          <CiShoppingCart size={28} className={iconClass} />
+          <CiUser size={28} className={iconClass} />
+          <MdOutlineLightMode size={28} className={iconClass} />
+          <button
+            className={`border ${
+              isScrolled
+                ? "text-[#4E342E] border-[#4E342E]"
+                : "text-gray-200 border-gray-200"
+            } bg-transparent rounded-2xl py-1 px-3`}
+          >
+            login
+          </button>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

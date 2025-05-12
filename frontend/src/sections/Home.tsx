@@ -4,16 +4,19 @@ import { motion } from "framer-motion";
 
 const Home = () => {
   return (
-    <div id="home" className="min-h-screen flex justify-center items-center px-20">
+    <div
+      id="home"
+      className="min-h-screen flex justify-center items-center px-20"
+    >
       <div className="flex-1 flex flex-col items-center justify-center">
         <div className="p-16 text-gray-100">
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 2 }} // Faster transition
-            className="display-quote text-5xl leading-18 font-black"
+            className="display-quote text-5xl leading-16 font-medium"
           >
-            We serve the richest and creamiest coffee in the city of Ormoc.
+            We serve the richest coffee in the city of Ormoc.
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
