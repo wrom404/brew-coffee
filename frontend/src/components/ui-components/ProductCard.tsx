@@ -24,7 +24,7 @@ const ProductCard: React.FC<{
         <img
           src={coffee.imageUrl}
           alt={coffee.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover hover:scale-105 transition-transform ease-in-out"
         />
 
         {/* Favorite Button */}
@@ -33,7 +33,7 @@ const ProductCard: React.FC<{
           className={`absolute top-3 right-3 p-2 rounded-full transition-colors duration-300 cursor-pointer ${
             favorite
               ? "bg-amber-600 text-white"
-              : "bg-white/70 text-amber-800 hover:bg-red-100"
+              : "bg-white/70 text-amber-600 hover:bg-red-100"
           }`}
         >
           <Heart

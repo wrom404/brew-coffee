@@ -14,48 +14,50 @@ import coffee19 from '../assets/coffee/pic19.jpg'
 import coffee20 from '../assets/coffee/pic20.jpg'
 import { Coffee } from '@/types/types'
 
+// featured photo
+import featuredPhoto1 from "@/assets/featured/pic12.jpg"
+import featuredPhoto2 from "@/assets/featured/pic19.jpg"
+import featuredPhoto4 from "@/assets/featured/pic20.jpg"
+
 // 
 
-export const categories = ['All', 'Single Origin', 'Blends', 'Espresso', 'Decaf'];
+export const categories = ['All', 'American', 'Milk-Based', 'Espresso', 'Black Coffee'];
 
 export const coffeeProducts: Coffee[] = [
   {
     id: "1",
-    title: "Ethiopian Yirgacheffe",
-    category: "Single Origin",
+    title: "Macchiato",
+    category: "Espresso",
     description:
-      "Bright and fruity with notes of citrus, bergamot and a delicate floral finish.",
-    price: 18.99,
+      "Espresso marked with a small amount of foamed milk. A bold shot with a smooth touch.",
+    price: 35.00,
     imageUrl: coffee13,
     badge: "BEST SELLER",
   },
   {
     id: "2",
-    title: "Colombian Supremo",
-    category: "Premium Blend",
-    description:
-      "Smooth and well-balanced with caramel sweetness and a nutty finish.",
-    price: 16.99,
-    imageUrl: coffee13,
+    title: 'Latte',
+    category: 'Milk-Based',
+    description: 'Espresso topped with silky steamed milk and a touch of foam. Smooth and comforting.',
+    price: 30.00,
+    imageUrl: featuredPhoto1,
   },
   {
     id: "3",
-    title: "Sumatra Mandheling",
-    category: "Dark Roast",
-    description:
-      "Full-bodied and earthy with low acidity and notes of dark chocolate.",
-    price: 19.99,
-    imageUrl: coffee13,
+    title: 'Affogato',
+    category: 'Dessert',
+    description: 'A scoop of vanilla ice cream "drowned" in a shot of hot espresso. A dessert and a drink in one.',
+    price: 50.00,
+    imageUrl: featuredPhoto2,
     badge: "NEW",
   },
   {
     id: "4",
-    title: "Guatemala Antigua",
-    category: "Medium Roast",
-    description:
-      "Medium-bodied with complex flavors of chocolate, spice and a subtle fruity acidity.",
-    price: 17.99,
-    imageUrl: coffee13,
+    title: 'Cold Brew',
+    category: 'Iced Coffee',
+    description: 'Slow-brewed for 12+ hours, resulting in a smooth, low-acid coffee served over ice.',
+    price: 45.00,
+    imageUrl: featuredPhoto4,
   },
 ];
 

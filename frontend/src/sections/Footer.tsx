@@ -3,7 +3,7 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <footer className="text-white py-16 pb-6 text-center px-36">
+    <footer className="text-white py-16 pb-6 text-center px-20">
       <div className="flex flex-col md:flex-row justify-between items-start min-w-4xl mx-auto">
         <div className="">
           <h3 className="text-lg py-2.5">SOCIAL MEDIA</h3>
@@ -41,7 +41,7 @@ const Footer = () => {
           <div className="text-left flex flex-col gap-4 text-sm font-light">
             <p className="">Brgy. South, Ormoc City Leyte</p>
             <p className="">0999-99-00-000</p>
-            <p className="">kofe-latte@email.com</p>
+            <p className="">brew.kofe@email.com</p>
           </div>
         </div>
         <div className="mb-4 md:mb-0">
@@ -54,7 +54,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-t border-(--secondary-color) my-8">
-        <p className="text-sm my-8">© 2025 kofe-latte. All Rights Reserved.</p>
+        <p className="text-sm my-8">© 2025 brew.kofe' All Rights Reserved.</p>
       </div>
     </footer>
   );

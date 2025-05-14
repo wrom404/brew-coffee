@@ -5,8 +5,6 @@ import { CoffeeProduct } from "@/types/types";
 import { useState } from "react";
 
 const Menu = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [imageName, setImageName] = useState<string>("");
   const [cart, setCart] = useState<CoffeeProduct[]>([]);
   const [favorites, setFavorites] = useState<CoffeeProduct[]>([]);
 
@@ -15,7 +13,7 @@ const Menu = () => {
   const handleAddToFavorites = () => {};
   return (
     <div
-      className="min-h-screen flex justify-center items-center flex-col pt-6 bg-[#E9DCC5]"
+      className="min-h-screen flex justify-center items-center flex-col py-6 bg-[#E9DCC5]"
       id="menu"
     >
       <div className="text-gray-800 text-4xl font-medium mt-12 mb-6">
@@ -37,11 +35,6 @@ const Menu = () => {
           />
         ))}
       </div>
-      <CardModal
-        imageName={imageName}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
       <button className=" px-4 py-2 rounded-lg bg-(--fifth-color) text-gray-200 tracking-wide mt-8">
         Load more
       </button>

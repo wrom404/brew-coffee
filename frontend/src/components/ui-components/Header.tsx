@@ -2,10 +2,12 @@ import { CiUser, CiSearch, CiShoppingCart } from "react-icons/ci";
 import { MdOutlineLightMode } from "react-icons/md";
 import { useState, useRef, useEffect } from "react";
 import { Coffee } from "lucide-react";
+import AuthModal from "./AuthModal";
 
 type ElementType = HTMLInputElement;
 
 const Header = () => {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isSearchIconShow, setIsSearchIconShow] = useState<boolean>(true);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const refSearch = useRef<ElementType>(null);
@@ -37,7 +39,7 @@ const Header = () => {
             isScrolled ? "text-amber-900" : "text-gray-50"
           }`}
         >
-          <Coffee className="" /> brew kofe'
+          <Coffee className="" /> brew.kofe'
         </div>
 
         {/* Navigation and Icons */}
@@ -63,7 +65,7 @@ const Header = () => {
       <div className="flex gap-12 items-center">
         {/* Search & Icons */}
         <div className="flex items-center gap-4">
-          <div className="relative w-64 h-[35px]">
+          <div className="relative min-w-64 h-[35px]">
             {!isSearchIconShow ? (
               <input
                 ref={refSearch}
@@ -82,7 +84,7 @@ const Header = () => {
                 className={`${
                   isScrolled ? "text-[#4E342E]" : "text-gray-50"
                 } cursor-pointer hover:text-[var(--quaternary-color)] transition absolute right-0 top-1/2 -translate-y-1/2`}
-                size={24}
+                size={28}
                 onClick={() => setIsSearchIconShow(false)}
               />
             )}
@@ -91,16 +93,23 @@ const Header = () => {
           <CiUser size={28} className={iconClass} />
           <MdOutlineLightMode size={28} className={iconClass} />
           <button
-            className={`border ${
+            className={`border whitespace-nowrap ${
               isScrolled
-                ? "text-[#4E342E] border-[#4E342E]"
-                : "text-gray-200 border-gray-200"
+                ? "text-[#4E342E] border-[#4E342E] hover:text-[var(--quaternary-color)] hover:border-[var(--quaternary-color)] cursor-pointer"
+                : "text-gray-300 border-gray-300"
             } bg-transparent rounded-2xl py-1 px-3`}
+            onClick={() => setIsAuthModalOpen(true)}
           >
-            login
+            Sign in
           </button>
         </div>
       </div>
+      {isAuthModalOpen && (
+        <AuthModal
+          setIsAuthModalOpen={setIsAuthModalOpen}
+          isAuthModalOpen={isAuthModalOpen}
+        />
+      )}
     </header>
   );
 };

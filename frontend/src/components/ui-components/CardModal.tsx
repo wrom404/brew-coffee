@@ -10,7 +10,7 @@ const CardModal = ({
   imageName: string;
 }) => {
   if (!isModalOpen) return null; // Hide modal when closed
-console.log(imageName)
+  console.log(imageName);
   return (
     <div
       className="fixed inset-0 bg-black/50 flex justify-center items-center"

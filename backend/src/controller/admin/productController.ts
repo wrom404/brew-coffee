@@ -10,13 +10,13 @@ import handleEmptyResult from "../../utils/handleEmptyResult";
 import isNotANumber from "../../utils/isNotANumber";
 
 export async function createProduct(req: Request, res: Response) {
-  const { name, description, price, stockQuantity } = req.body;
+  const { name, description, price, stockQuantity, category } = req.body;
   const imageUrl = req.file ? `../../uploads/products${req.file.filename}` : null;
 
-  if (validateRequiredFields(res, [name, description, price, stockQuantity, imageUrl])) return;
+  if (validateRequiredFields(res, [name, description, price, stockQuantity, imageUrl, category])) return;
 
   try {
-    const newProduct = await db.insert(products).values({ name, description, price, imageUrl, stockQuantity }).returning();
+    const newProduct = await db.insert(products).values({ name, category, description, price, imageUrl, stockQuantity }).returning();
     if (handleEmptyResult(newProduct, res, "Failed to create product.")) return;
 
     res.status(201).json({ success: true, data: newProduct });
