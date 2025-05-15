@@ -1,4 +1,3 @@
-import Header from "@/components/ui-components/Header";
 import Featured from "@/sections/Featured";
 import Menu from "@/sections/Menu";
 import Home from "@/sections/Home";
@@ -9,7 +8,6 @@ import Contact from "@/sections/Contact";
 const Page = () => {
   return (
     <div className="relative home min-h-screen bg-(--primary-color)">
-      <Header />
       <Home />
       <Featured />
       <Menu />

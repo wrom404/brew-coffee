@@ -1,20 +1,20 @@
-import { CiUser, CiSearch, CiShoppingCart } from "react-icons/ci";
-import { MdOutlineLightMode } from "react-icons/md";
-import { useState, useRef, useEffect } from "react";
-import { Coffee } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  // NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+import { Link } from "react-router"; // if you're using React Router
+import { Coffee, Search, UserRound, Sun, ShoppingBag } from "lucide-react";
 import SignInModal from "../auth/SignInModal";
 import SignUpModal from "../auth/SignUpModal";
 
-type ElementType = HTMLInputElement;
-
-const Header = () => {
+export default function Header() {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState<boolean>(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<boolean>(false);
-
-  const [isSearchIconShow, setIsSearchIconShow] = useState<boolean>(true);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const refSearch = useRef<ElementType>(null);
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -28,73 +28,86 @@ const Header = () => {
   }`;
 
   return (
-    <header
-      className={`fixed w-full z-50 flex justify-between items-center transition-all duration-300 backdrop-blur-md px-16 ${
-        isScrolled
-          ? "bg-white bg-opacity-95 shadow-sm text-[#4E342E] py-4"
-          : "bg-transparent py-6"
-      }`}
-    >
-      {/* Logo */}
-      <div className="flex  justify-between w-full mr-8">
-        <div
-          className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${
-            isScrolled ? "text-amber-900" : "text-gray-50"
-          }`}
-        >
-          <Coffee className="" /> brew.kofe'
-        </div>
+    // px-4 md:px-6 lg:px-8
+    <div className={`fixed w-full z-50`}>
+      <header
+        className={`h-20 w-full shrink-0 items-center px-4 md:px-18 flex justify-between gap-12  ${
+          isScrolled
+            ? "bg-white bg-opacity-95 shadow-sm text-[#4E342E]"
+            : "bg-transparent py-0"
+        }`}
+      >
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="lg:hidden">
+              <MenuIcon className="h-6 w-6" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <div
+              className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${
+                isScrolled ? "text-amber-900" : "text-gray-50"
+              }`}
+            >
+              <Coffee className="" /> brew.kofe'
+            </div>
+            <div className="grid gap-2">
+              {["Home", "Feature", "About Us", "Menu", "Contact"].map(
+                (label) => (
+                  <li key={label}>
+                    <a
+                      href={`#${label.toLowerCase().replace(" ", "")}`}
+                      className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                        isScrolled ? "text-amber-900" : "text-gray-50"
+                      }`}
+                    >
+                      {label}
+                    </a>
+                  </li>
+                )
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
 
-        {/* Navigation and Icons */}
-        {/* Navigation Links */}
-        <ul
-          className={`hidden md:flex items-center gap-6 text-lg transition-colors ${
-            isScrolled ? "text-[#4E342E]" : "text-gray-100"
-          }`}
-        >
-          {["Home", "Feature", "About Us", "Menu", "Contact"].map((label) => (
-            <li key={label}>
-              <a
-                href={`#${label.toLowerCase().replace(" ", "")}`}
-                className="relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left"
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="flex gap-12 items-center">
-        {/* Search & Icons */}
-        <div className="flex items-center gap-4">
-          <div className="relative min-w-64 h-[35px]">
-            {!isSearchIconShow ? (
-              <input
-                ref={refSearch}
-                onFocus={() => setIsSearchIconShow(false)}
-                onBlur={() => setIsSearchIconShow(true)}
-                type="text"
-                placeholder="Search..."
-                className={`transition-all duration-300 border absolute top-0 right-0 ${
-                  isScrolled
-                    ? "border-[#4E342E] focus:ring-[#4E342E]"
-                    : " border-gray-400 text-gray-200"
-                } rounded-lg outline-none focus:ring w-64 py-1 px-4`}
-              />
-            ) : (
-              <CiSearch
-                className={`${
-                  isScrolled ? "text-[#4E342E]" : "text-gray-50"
-                } cursor-pointer hover:text-[var(--quaternary-color)] transition absolute right-0 top-1/2 -translate-y-1/2`}
-                size={28}
-                onClick={() => setIsSearchIconShow(false)}
-              />
-            )}
+        <Link to="#" className="mr-6 hidden lg:flex items-center gap-2">
+          <div
+            className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${
+              isScrolled ? "text-amber-900" : "text-gray-50"
+            }`}
+          >
+            <Coffee className="" /> brew.kofe'
           </div>
-          <CiShoppingCart size={28} className={iconClass} />
-          <CiUser size={28} className={iconClass} />
-          <MdOutlineLightMode size={28} className={iconClass} />
+        </Link>
+
+        <NavigationMenu className="hidden lg:flex">
+          <NavigationMenuList className="space-x-3">
+            {["Home", "Feature", "About Us", "Menu", "Contact"].map((label) => (
+              <li key={label}>
+                <a
+                  href={`#${label.toLowerCase().replace(" ", "")}`}
+                  className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                    isScrolled ? "text-amber-900" : "text-gray-50"
+                  }`}
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        <div className="ml-auto flex items-center gap-4">
+          <Search
+            className={`${
+              isScrolled ? "text-[#4E342E]" : "text-gray-50"
+            } cursor-pointer hover:text-[var(--quaternary-color)] transition`}
+            size={22}
+          />
+          <UserRound size={22} className={iconClass} />
+          <ShoppingBag size={22} className={iconClass} />
+          <Sun size={22} className={iconClass} />
           <button
             className={`border whitespace-nowrap ${
               isScrolled
@@ -106,7 +119,7 @@ const Header = () => {
             Sign in
           </button>
         </div>
-      </div>
+      </header>
       {isSignInModalOpen && (
         <SignInModal
           setIsSignInModalOpen={setIsSignInModalOpen}
@@ -122,8 +135,28 @@ const Header = () => {
           setIsSignUpModalOpen={setIsSignUpModalOpen}
         />
       )}
-    </header>
+    </div>
   );
-};
+}
 
-export default Header;
+// Menu Icon SVG Component
+function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="4" x2="20" y1="12" y2="12" />
+      <line x1="4" x2="20" y1="6" y2="6" />
+      <line x1="4" x2="20" y1="18" y2="18" />
+    </svg>
+  );
+}

@@ -3,58 +3,66 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <footer className="text-white py-16 pb-6 text-center px-20">
-      <div className="flex flex-col md:flex-row justify-between items-start min-w-4xl mx-auto">
-        <div className="">
-          <h3 className="text-lg py-2.5">SOCIAL MEDIA</h3>
-          <nav className="mb-4 md:mb-0 flex flex-col gap-4 text-sm">
+    <footer className="text-white py-12 px-6 md:px-16 lg:px-20 bg-black">
+      <div className="flex flex-col gap-10 md:flex-row md:justify-between max-w-7xl mx-auto w-full">
+        {/* Social Media */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4">SOCIAL MEDIA</h3>
+          <nav className="flex flex-col gap-3 text-sm">
             <a
               href="#"
-              className="mx-2 hover:text-gray-400 flex items-center gap-2.5"
+              className="hover:text-gray-400 flex items-center gap-2.5"
             >
-              <FaFacebookF /> facebook
+              <FaFacebookF /> Facebook
             </a>
             <a
               href="#"
-              className="mx-2 hover:text-gray-400 flex items-center gap-2.5"
+              className="hover:text-gray-400 flex items-center gap-2.5"
             >
-              <FaXTwitter /> twitter
+              <FaXTwitter /> Twitter
             </a>
             <a
               href="#"
-              className="mx-2 hover:text-gray-400 flex items-center gap-2.5"
+              className="hover:text-gray-400 flex items-center gap-2.5"
             >
-              <FaTiktok /> tiktok
+              <FaTiktok /> TikTok
             </a>
           </nav>
         </div>
-        <div className="mb-4 md:mb-0">
-          <h3 className="text-lg py-2.5">SERVICES</h3>
-          <div className="text-left flex flex-col gap-4 text-sm font-light pl-2.5">
-            <p className="">Shop</p>
-            <p className="">Order</p>
-            <p className="">Delivery</p>
+
+        {/* Services */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4">SERVICES</h3>
+          <div className="flex flex-col gap-3 text-sm font-light">
+            <p>Shop</p>
+            <p>Order</p>
+            <p>Delivery</p>
           </div>
         </div>
-        <div className="mb-4 md:mb-0">
-          <h3 className="text-lg py-2.5 text-center">ADDRESS</h3>
-          <div className="text-left flex flex-col gap-4 text-sm font-light">
-            <p className="">Brgy. South, Ormoc City Leyte</p>
-            <p className="">0999-99-00-000</p>
-            <p className="">brew.kofe@email.com</p>
+
+        {/* Address */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4">ADDRESS</h3>
+          <div className="flex flex-col gap-3 text-sm font-light">
+            <p>Brgy. South, Ormoc City Leyte</p>
+            <p>0999-99-00-000</p>
+            <p>brew.kofe@email.com</p>
           </div>
         </div>
-        <div className="mb-4 md:mb-0">
-          <h3 className="text-lg py-2.5 text-center">OPENING HOURS</h3>
-          <div className="text-left flex flex-col gap-4 text-sm font-light">
-            <p className="">Mon-Fri: 8am-5pm</p>
-            <p className="">Sat: 9am-4pm</p>
-            <p className="">Sun: 10am-4pm</p>
+
+        {/* Opening Hours */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4">OPENING HOURS</h3>
+          <div className="flex flex-col gap-3 text-sm font-light">
+            <p>Mon-Fri: 8am-5pm</p>
+            <p>Sat: 9am-4pm</p>
+            <p>Sun: 10am-4pm</p>
           </div>
         </div>
       </div>
-      <div className="border-t border-(--secondary-color) my-8">
-        <p className="text-sm my-8">© 2025 brew.kofe' All Rights Reserved.</p>
+
+      <div className="border-t border-gray-700 mt-12 pt-6 text-center">
+        <p className="text-sm">© 2025 brew.kofe' All Rights Reserved.</p>
       </div>
     </footer>
   );

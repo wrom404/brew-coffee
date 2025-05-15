@@ -11,20 +11,21 @@ const Menu = () => {
   const handleAddToCart = () => {};
 
   const handleAddToFavorites = () => {};
+
   return (
-    <div
-      className="min-h-screen flex justify-center items-center flex-col py-6 bg-[#E9DCC5]"
+    <section
+      className="min-h-screen flex flex-col items-center py-12 px-4 sm:px-8 md:px-16 bg-[#E9DCC5]"
       id="menu"
     >
-      <div className="text-gray-800 text-4xl font-medium mt-12 mb-6">
-        {" "}
+      <h2 className="text-2xl sm:text-3xl md:text-4xl text-gray-800 font-medium text-center mb-4">
         Our Menu
-      </div>
-      <p className="text-amber-900 text-lg leading-7 tracking-wide w-[42rem] text-center mb-18">
+      </h2>
+      <p className="text-base sm:text-lg text-amber-900 leading-7 tracking-wide text-center max-w-3xl mb-12">
         Indulge in a curated collection of specialty coffees, each selected for
         its unique flavor profile and exceptional quality.
       </p>
-      <div className="grid grid-cols-4 gap-8">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl px-2">
         {coffeeProductsMenu.map((coffee) => (
           <ProductCard
             key={coffee.id}
@@ -35,10 +36,11 @@ const Menu = () => {
           />
         ))}
       </div>
-      <button className=" px-4 py-2 rounded-lg bg-(--fifth-color) text-gray-200 tracking-wide mt-8">
+
+      <button className="mt-10 px-6 py-3 rounded-lg bg-[--fifth-color] hover:bg-[#a34b08] text-gray-200 tracking-wide text-sm sm:text-base">
         Load more
       </button>
-    </div>
+    </section>
   );
 };
 

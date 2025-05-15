@@ -35,7 +35,7 @@ const SignInModal = ({
     setIsSignUpModalOpen(true);
   };
   return (
-    <div className="fixed h-screen w-full inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div className="fixed h-screen w-full inset-0 bg-black/50 flex items-center justify-center p-4 z-10">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white rounded-lg shadow-xl w-full max-w-md relative overflow-hidden"
