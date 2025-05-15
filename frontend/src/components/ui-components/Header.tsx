@@ -2,12 +2,15 @@ import { CiUser, CiSearch, CiShoppingCart } from "react-icons/ci";
 import { MdOutlineLightMode } from "react-icons/md";
 import { useState, useRef, useEffect } from "react";
 import { Coffee } from "lucide-react";
-import AuthModal from "./AuthModal";
+import SignInModal from "../auth/SignInModal";
+import SignUpModal from "../auth/SignUpModal";
 
 type ElementType = HTMLInputElement;
 
 const Header = () => {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState<boolean>(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<boolean>(false);
+
   const [isSearchIconShow, setIsSearchIconShow] = useState<boolean>(true);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const refSearch = useRef<ElementType>(null);
@@ -97,17 +100,26 @@ const Header = () => {
               isScrolled
                 ? "text-[#4E342E] border-[#4E342E] hover:text-[var(--quaternary-color)] hover:border-[var(--quaternary-color)] cursor-pointer"
                 : "text-gray-300 border-gray-300"
-            } bg-transparent rounded-2xl py-1 px-3`}
-            onClick={() => setIsAuthModalOpen(true)}
+            } bg-transparent rounded-2xl py-1 px-3  cursor-pointer`}
+            onClick={() => setIsSignInModalOpen(true)}
           >
             Sign in
           </button>
         </div>
       </div>
-      {isAuthModalOpen && (
-        <AuthModal
-          setIsAuthModalOpen={setIsAuthModalOpen}
-          isAuthModalOpen={isAuthModalOpen}
+      {isSignInModalOpen && (
+        <SignInModal
+          setIsSignInModalOpen={setIsSignInModalOpen}
+          isSignInModalOpen={isSignInModalOpen}
+          setIsSignUpModalOpen={setIsSignUpModalOpen}
+          // isSignUpModalOpen={isSignInModalOpen}
+        />
+      )}
+      {isSignUpModalOpen && (
+        <SignUpModal
+          setIsSignInModalOpen={setIsSignInModalOpen}
+          isSignUpModalOpen={isSignUpModalOpen}
+          setIsSignUpModalOpen={setIsSignUpModalOpen}
         />
       )}
     </header>

@@ -1,5 +1,13 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { Mail, Lock, User, X, AlertCircle } from "lucide-react";
+import {
+  signInSchema,
+  SignInSchema,
+  signUpSchema,
+  SignUpSchema,
+} from "@/lib/zod/authSchema";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function AuthModal({
   isAuthModalOpen,
@@ -9,37 +17,32 @@ export default function AuthModal({
   setIsAuthModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isSignIn, setIsSignIn] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
+  const signInForm = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
+    mode: "onSubmit",
+  });
 
-    // Basic validation
-    if (!email || !password || (!isSignIn && !name)) {
-      setError("Please fill in all fields");
-      return;
+  const signUpForm = useForm<SignUpSchema>({
+    resolver: zodResolver(signUpSchema),
+    mode: "onSubmit",
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = isSignIn ? signInForm : signUpForm;
+
+  const onSubmit: SubmitHandler<SignInSchema | SignUpSchema> = (data) => {
+    if (isSignIn) {
+      const { email, password } = data as SignInSchema;
+      console.log("Signing in...", { email, password });
+    } else {
+      const { name, email, password } = data as SignUpSchema;
+      console.log("Signing up...", { name, email, password });
     }
-
-    if (!email.includes("@")) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
-    // Simulated API call
-    console.log(isSignIn ? "Signing in..." : "Signing up...", {
-      email,
-      password,
-      ...(isSignIn ? {} : { name }),
-    });
   };
 
   const handleGoogleAuth = () => {
@@ -56,14 +59,14 @@ export default function AuthModal({
   return (
     <div className="fixed h-screen w-full inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="bg-white rounded-lg shadow-xl w-full max-w-md relative overflow-hidden"
       >
         {/* Close button */}
         <button
           type="button"
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-          onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}
+          onClick={() => setIsAuthModalOpen(false)}
         >
           <X size={20} />
         </button>
@@ -97,10 +100,12 @@ export default function AuthModal({
                   <input
                     id="name"
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    {...signUpForm.register("name")}
+                    aria-invalid={
+                      signUpForm.formState.errors.name ? "true" : "false"
+                    }
                     placeholder="John Doe"
-                    className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   />
                 </div>
               </div>
@@ -120,10 +125,10 @@ export default function AuthModal({
                 <input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
+                  aria-invalid={errors.email ? "true" : "false"}
                   placeholder="you@example.com"
-                  className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>
             </div>
@@ -142,17 +147,17 @@ export default function AuthModal({
                 <input
                   id="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
+                  aria-invalid={errors.password ? "true" : "false"}
                   placeholder={isSignIn ? "Your password" : "Create password"}
-                  className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>
               {isSignIn && (
                 <div className="mt-2 text-right">
                   <a
                     href="#"
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="text-sm text-amber-600 hover:text-amber-800 cursor-pointer"
                   >
                     Forgot password?
                   </a>
@@ -162,7 +167,7 @@ export default function AuthModal({
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+              className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer"
             >
               {isSignIn ? "Sign In" : "Create Account"}
             </button>
@@ -220,7 +225,7 @@ export default function AuthModal({
               <button
                 type="button"
                 onClick={toggleMode}
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-amber-600 hover:text-amber-800 font-medium cursor-pointer"
               >
                 {isSignIn ? "Sign up" : "Sign in"}
               </button>
