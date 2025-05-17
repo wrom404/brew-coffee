@@ -4,17 +4,19 @@ import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuList,
-  // NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router"; // if you're using React Router
-import { Coffee, Search, UserRound, Sun, ShoppingBag } from "lucide-react";
+import { Coffee, Search, Sun, ShoppingBag } from "lucide-react";
 import SignInModal from "../auth/SignInModal";
 import SignUpModal from "../auth/SignUpModal";
+
+import { DropdownMenuCheckboxes } from "@/components/ui-components/DropdownMenu"
 
 export default function Header() {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState<boolean>(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -23,19 +25,19 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const iconClass = `cursor-pointer transition hover:text-[var(--quaternary-color)] ${
-    isScrolled ? "text-[#4E342E]" : "text-gray-300"
-  }`;
+  const iconClass = `cursor-pointer transition ${isScrolled
+    ? "text-[#4E342E] hover:text-amber-700"
+    : "text-gray-50 hover:text-[var(--quaternary-color)]"
+    }`;
 
   return (
     // px-4 md:px-6 lg:px-8
     <div className={`fixed w-full z-50`}>
       <header
-        className={`h-20 w-full shrink-0 items-center px-4 md:px-18 flex justify-between gap-12  ${
-          isScrolled
-            ? "bg-white bg-opacity-95 shadow-sm text-[#4E342E]"
-            : "bg-transparent py-0"
-        }`}
+        className={`h-20 w-full shrink-0 items-center px-4 md:px-18 flex justify-between gap-12  ${isScrolled
+          ? "bg-white bg-opacity-95 shadow-sm text-[#4E342E]"
+          : "bg-transparent py-0"
+          }`}
       >
         <Sheet>
           <SheetTrigger asChild>
@@ -46,9 +48,8 @@ export default function Header() {
           </SheetTrigger>
           <SheetContent side="left">
             <div
-              className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${
-                isScrolled ? "text-amber-900" : "text-gray-50"
-              }`}
+              className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled ? "text-amber-900" : "text-gray-50"
+                }`}
             >
               <Coffee className="" /> brew.kofe'
             </div>
@@ -58,9 +59,8 @@ export default function Header() {
                   <li key={label}>
                     <a
                       href={`#${label.toLowerCase().replace(" ", "")}`}
-                      className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${
-                        isScrolled ? "text-amber-900" : "text-gray-50"
-                      }`}
+                      className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${isScrolled ? "text-amber-900" : "text-gray-50"
+                        }`}
                     >
                       {label}
                     </a>
@@ -73,9 +73,8 @@ export default function Header() {
 
         <Link to="#" className="mr-6 hidden lg:flex items-center gap-2">
           <div
-            className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${
-              isScrolled ? "text-amber-900" : "text-gray-50"
-            }`}
+            className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled ? "text-amber-900" : "text-gray-50"
+              }`}
           >
             <Coffee className="" /> brew.kofe'
           </div>
@@ -87,9 +86,8 @@ export default function Header() {
               <li key={label}>
                 <a
                   href={`#${label.toLowerCase().replace(" ", "")}`}
-                  className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${
-                    isScrolled ? "text-amber-900" : "text-gray-50"
-                  }`}
+                  className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${isScrolled ? "text-amber-900" : "text-gray-50"
+                    }`}
                 >
                   {label}
                 </a>
@@ -99,33 +97,42 @@ export default function Header() {
         </NavigationMenu>
 
         <div className="ml-auto flex items-center gap-4">
+          {/* Search Icon */}
           <Search
-            className={`${
-              isScrolled ? "text-[#4E342E]" : "text-gray-50"
-            } cursor-pointer hover:text-[var(--quaternary-color)] transition`}
+            className={`${isScrolled
+              ? "text-[#4E342E] hover:text-amber-700"
+              : "text-gray-50  hover:text-[var(--quaternary-color)]"
+              } cursor-pointer transition`}
             size={22}
           />
-          <UserRound size={22} className={iconClass} />
+
+          {/* Cart Icon */}
           <ShoppingBag size={22} className={iconClass} />
+
+          {/* User Profile Icon */}
+          <DropdownMenuCheckboxes isScrolled={isScrolled} />
+          {/* Toggle Light/Dark Mode */}
           <Sun size={22} className={iconClass} />
+
+          {/* Sign in Button */}
           <button
-            className={`border whitespace-nowrap ${
-              isScrolled
-                ? "text-[#4E342E] border-[#4E342E] hover:text-[var(--quaternary-color)] hover:border-[var(--quaternary-color)] cursor-pointer"
-                : "text-gray-300 border-gray-300"
-            } bg-transparent rounded-2xl py-1 px-3  cursor-pointer`}
+            className={`border whitespace-nowrap ${isScrolled
+              ? "text-[#4E342E] border-[#4E342E] hover:text-amber-700 hover:border-amber-700 cursor-pointer"
+              : "text-gray-50 border-gray-300 hover:text-[var(--quaternary-color)] hover:border-[var(--quaternary-color)]"
+              } bg-transparent rounded-md py-1 px-3 cursor-pointer`}
             onClick={() => setIsSignInModalOpen(true)}
           >
             Sign in
           </button>
         </div>
+
       </header>
       {isSignInModalOpen && (
         <SignInModal
           setIsSignInModalOpen={setIsSignInModalOpen}
           isSignInModalOpen={isSignInModalOpen}
           setIsSignUpModalOpen={setIsSignUpModalOpen}
-          // isSignUpModalOpen={isSignInModalOpen}
+        // isSignUpModalOpen={isSignInModalOpen}
         />
       )}
       {isSignUpModalOpen && (

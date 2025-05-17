@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpSchema, signUpSchema } from "@/lib/zod/authSchema";
 import { Dispatch, SetStateAction } from "react";
-import { Mail, User, X, Lock } from "lucide-react";
+import { X } from "lucide-react";
 
 const SignUpModal = ({
   setIsSignInModalOpen,
@@ -66,15 +66,11 @@ const SignUpModal = ({
                 Full Name
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                  <User size={18} />
-                </div>
                 <input
                   id="name"
                   type="text"
                   {...register("name")}
                   aria-invalid={errors.name ? "true" : "false"}
-                  placeholder="John Doe"
                   className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>
@@ -88,15 +84,11 @@ const SignUpModal = ({
                 Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                  <Mail size={18} />
-                </div>
                 <input
                   id="email"
                   type="email"
                   {...register("email")}
                   aria-invalid={errors.email ? "true" : "false"}
-                  placeholder="you@example.com"
                   className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>
@@ -110,15 +102,11 @@ const SignUpModal = ({
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                  <Lock size={18} />
-                </div>
                 <input
                   id="password"
                   type="password"
                   {...register("password")}
                   aria-invalid={errors.password ? "true" : "false"}
-                  placeholder={"Create password"}
                   className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 />
               </div>

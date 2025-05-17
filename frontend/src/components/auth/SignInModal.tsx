@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signInSchema, SignInSchema } from "@/lib/zod/authSchema";
 import { Dispatch, SetStateAction } from "react";
-import { Lock, Mail, X } from "lucide-react";
+import { X } from "lucide-react";
 
 const SignInModal = ({
   setIsSignInModalOpen,
@@ -61,15 +61,11 @@ const SignInModal = ({
                 Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                  <Mail size={18} />
-                </div>
                 <input
                   id="email"
                   type="email"
                   {...register("email")}
                   aria-invalid={errors.email ? "true" : "false"}
-                  placeholder="you@example.com"
                   className={`pl-10 w-full p-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${
                     errors.email ? "border-red-500" : "border-gray-300"
                   }`}
@@ -90,15 +86,11 @@ const SignInModal = ({
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                  <Lock size={18} />
-                </div>
                 <input
                   id="password"
                   type="password"
                   {...register("password")}
                   aria-invalid={errors.password ? "true" : "false"}
-                  placeholder="Your Password"
                   className={`pl-10 w-full p-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${
                     errors.password ? "border-red-500" : "border-gray-300"
                   }`}
