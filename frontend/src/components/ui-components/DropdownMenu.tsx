@@ -39,7 +39,7 @@ export function DropdownMenuCheckboxes({ isScrolled }: { isScrolled: boolean }) 
         <DropdownMenuCheckboxItem
           className="hover:bg-amber-100 cursor-pointer"
         >
-          <LogOut className="mr-2" size={18} /><Link to={"/"}>Logout</Link>
+          <LogOut className="mr-2" size={18} /><Link to={"/logout"}>Logout</Link>
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

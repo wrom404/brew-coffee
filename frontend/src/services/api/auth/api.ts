@@ -1,13 +1,13 @@
 import { SignInSchema } from "@/lib/zod/authSchema"
 import axios from "axios"
 
-interface SignInProps {
+interface Auth {
   success?: boolean;
   message?: string;
   error?: string;
 }
 
-export const handleSignIn = async (userData: SignInSchema): Promise<SignInProps | void> => {
+export const handleSignIn = async (userData: SignInSchema): Promise<Auth | void> => {
   try {
     const result = await axios.post(`http://localhost:4000/api/auth/sign-in`, userData);
 
@@ -16,6 +16,7 @@ export const handleSignIn = async (userData: SignInSchema): Promise<SignInProps 
       // otherwise it will display as "[object Object]" in logs.
       throw new Error(result.data.message || "Signin failed.");
     }
+    console.log("result: ", result.data)
 
     return result.data; // ✅ This will be passed to the onSuccess callback of React Query
   } catch (error: unknown) {
@@ -26,11 +27,33 @@ export const handleSignIn = async (userData: SignInSchema): Promise<SignInProps 
 
     if (error instanceof Error) {
       console.log("Error message:", error.message);
-      // ❗ If `success: false`, this error is passed to the onError callback of React Query
+      // Re-throws the original error (e.g., from `throw new Error(result.data.message || "Signin failed.");` in the try block) to React Query's `onError`.
+      // Preserves the error message and stack trace for debugging.
       throw error;
     }
 
     throw new Error("An unexpected error occurred.");
   }
 };
+
+export const handleSignOut = async (): Promise<Auth | void> => {
+  try {
+    const result = await axios.post('http://localhost:4000/api/auth/logout');
+
+    if (!result.data.success) {
+      throw new Error(result.data.message || "Sign-up failed.")
+    }
+
+    return result.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "An Axios error occurred")
+    }
+
+    if (error instanceof Error) {
+      throw (error.message)
+    }
+    console.log("An unexpected error occurred.")
+  }
+}
 
