@@ -1,4 +1,3 @@
-// import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -7,7 +6,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { UserRound } from "lucide-react"
+import { UserRound, LogOut, Settings } from "lucide-react"
+import { Link } from "react-router"
 
 
 export function DropdownMenuCheckboxes({ isScrolled }: { isScrolled: boolean }) {
@@ -23,23 +23,23 @@ export function DropdownMenuCheckboxes({ isScrolled }: { isScrolled: boolean }) 
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56 bg-gray-50 z-10">
+      <DropdownMenuContent className="w-56 bg-gray-50 z-10 pb-3">
         <DropdownMenuLabel>Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
           className="hover:bg-amber-100 cursor-pointer"
         >
-          Profile
+          <UserRound className="mr-2" size={18} /><Link to={"/"}>Profile</Link>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           className="hover:bg-amber-100 cursor-pointer"
         >
-          Settings
+          <Settings className="mr-2" size={18} /><Link to={"/"}>Settings</Link>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           className="hover:bg-amber-100 cursor-pointer"
         >
-          Logout
+          <LogOut className="mr-2" size={18} /><Link to={"/"}>Logout</Link>
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -33,7 +33,7 @@ export async function signupUser(req: Request, res: Response) {
   }
 }
 
-export async function loginUser(req: Request, res: Response) {
+export async function signInUser(req: Request, res: Response) {
   const { email, password } = req.body
 
   if (validateRequiredFields(res, [email, password])) return;
@@ -41,13 +41,13 @@ export async function loginUser(req: Request, res: Response) {
   try {
     const isUserExist = await db.select().from(users).where(eq(users.email, email));
 
-    if (handleEmptyResult(isUserExist, res, "Email not found.")) return;
+    if (handleEmptyResult(isUserExist, res, "Email not found.", 200)) return;
 
     const fetchedUser = isUserExist[0];
 
     const isPasswordValid = await validatePassword(password, fetchedUser.password);
     if (!isPasswordValid) {
-      res.status(400).json({ success: false, message: "Password is incorrect." })
+      res.status(200).json({ success: false, message: "Password is incorrect." })
       return;
     }
 
@@ -56,7 +56,6 @@ export async function loginUser(req: Request, res: Response) {
     res.status(201).json({ success: true, message: "Login successfully." })
   } catch (error) {
     res.status(400).json({ success: false, error })
-
   }
 }
 

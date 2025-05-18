@@ -1,11 +1,11 @@
 import express from "express";
-import { signupUser, loginUser, logoutUser } from "../../controller/auth/authController";
+import { signupUser, signInUser, logoutUser } from "../../controller/auth/authController";
 
 const routes = express.Router();
 
 routes.post('/sign-up', signupUser)
 
-routes.post('/login', loginUser)
+routes.post('/sign-in', signInUser)
 
 routes.post('/logout', logoutUser)
 

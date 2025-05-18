@@ -1,20 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signInSchema, SignInSchema } from "@/lib/zod/authSchema";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { X } from "lucide-react";
+import { useSignIn } from "@/hooks/auth/useSignIn";
 
 const SignInModal = ({
   setIsSignInModalOpen,
   isSignInModalOpen,
   setIsSignUpModalOpen,
 }: // isSignUpModalOpen,
-{
-  setIsSignInModalOpen: Dispatch<SetStateAction<boolean>>;
-  isSignInModalOpen: boolean;
-  setIsSignUpModalOpen: Dispatch<SetStateAction<boolean>>;
-  // isSignUpModalOpen: boolean;
-}) => {
+  {
+    setIsSignInModalOpen: Dispatch<SetStateAction<boolean>>;
+    isSignInModalOpen: boolean;
+    setIsSignUpModalOpen: Dispatch<SetStateAction<boolean>>;
+    // isSignUpModalOpen: boolean;
+  }) => {
   const {
     handleSubmit,
     register,
@@ -22,18 +23,36 @@ const SignInModal = ({
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   });
+  const { mutate: signIn, isPending: isSigningIn, isError: SignInError } = useSignIn();
+  const [signInError, setSignInError] = useState<string>('');
 
   if (!isSignInModalOpen) return null;
 
   const onSubmit: SubmitHandler<SignInSchema> = (data) => {
-    console.log("Signing in...");
-    console.log("data: ", data);
+    // The onSuccess and onError callbacks below allow us to handle the result of the signIn mutation directly.
+    // - onSuccess is called when the API request succeeds and returns the response data (e.g., user info, token).
+    // - onError is triggered if the API request fails (e.g., invalid credentials, network issues).
+    // These callbacks let us show appropriate feedback (e.g., error message or redirect on login success) immediately after the mutation.
+    signIn(data, {
+      onSuccess: (successDataResult) => {
+        console.log("Response data from API: ", successDataResult)
+      },
+      onError: (errorData) => {
+        console.log("errorData: ", errorData)
+        setSignInError(errorData.message)
+      }
+    })
   };
+
 
   const handleSignUp = () => {
     setIsSignInModalOpen(false);
     setIsSignUpModalOpen(true);
   };
+
+  if (SignInError) {
+    console.log("SignInError: ", SignInError)
+  }
   return (
     <div className="fixed h-screen w-full inset-0 bg-black/50 flex items-center justify-center p-4 z-10">
       <form
@@ -52,6 +71,11 @@ const SignInModal = ({
         {/* Modal content */}
         <div className="p-8">
           <h2 className="text-2xl font-bold text-center mb-6">Sign in</h2>
+          {
+            signInError && (
+              <h3 className="text-red-500 text-sm my-2 text-start">{signInError}</h3>
+            )
+          }
           <div>
             <div className="mb-4">
               <label
@@ -66,9 +90,8 @@ const SignInModal = ({
                   type="email"
                   {...register("email")}
                   aria-invalid={errors.email ? "true" : "false"}
-                  className={`pl-10 w-full p-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`pl-10 w-full p-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${errors.email ? "border-red-500" : "border-gray-300"
+                    }`}
                 />
                 {errors.email && (
                   <p className="text-sm text-red-500 mt-1">
@@ -91,9 +114,8 @@ const SignInModal = ({
                   type="password"
                   {...register("password")}
                   aria-invalid={errors.password ? "true" : "false"}
-                  className={`pl-10 w-full p-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${
-                    errors.password ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`pl-10 w-full p-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${errors.password ? "border-red-500" : "border-gray-300"
+                    }`}
                 />
                 {errors.password && (
                   <p className="text-sm text-red-500 mt-1">
@@ -107,7 +129,7 @@ const SignInModal = ({
               type="submit"
               className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer"
             >
-              Sign In
+              {isSigningIn ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
 
