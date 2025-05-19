@@ -53,7 +53,7 @@ export async function signInUser(req: Request, res: Response) {
 
     generateToken(fetchedUser.id, fetchedUser.role as string, res)
 
-    res.status(201).json({ success: true, message: "Login successfully." })
+    res.status(201).json({ success: true, message: "Sign in successfully." })
   } catch (error) {
     res.status(400).json({ success: false, error })
   }
@@ -61,5 +61,5 @@ export async function signInUser(req: Request, res: Response) {
 
 export async function logoutUser(req: Request, res: Response) {
   res.clearCookie("token");
-  res.status(200).json({ success: true, message: "Logout successfully." })
+  res.status(200).json({ success: true, message: "Sign out successfully." })
 }

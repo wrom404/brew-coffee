@@ -4,6 +4,7 @@ import { signInSchema, SignInSchema } from "@/lib/zod/authSchema";
 import { Dispatch, SetStateAction, useState } from "react";
 import { X } from "lucide-react";
 import { useSignIn } from "@/hooks/auth/useSignIn";
+import toast from "react-hot-toast";
 
 const SignInModal = ({
   setIsSignInModalOpen,
@@ -23,7 +24,7 @@ const SignInModal = ({
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   });
-  const { mutate: signIn, isPending: isSigningIn, isError: SignInError } = useSignIn();
+  const { mutate: signIn, isPending: isSigningIn, } = useSignIn();
   const [signInError, setSignInError] = useState<string>('');
 
   if (!isSignInModalOpen) return null;
@@ -35,7 +36,8 @@ const SignInModal = ({
     // These callbacks let us show appropriate feedback (e.g., error message or redirect on login success) immediately after the mutation.
     signIn(data, {
       onSuccess: (successDataResult) => {
-        console.log("Response data from API: ", successDataResult)
+        toast.success(successDataResult?.message as string)
+        setIsSignInModalOpen(false)
       },
       onError: (errorData) => {
         console.log("errorData: ", errorData)
@@ -50,9 +52,7 @@ const SignInModal = ({
     setIsSignUpModalOpen(true);
   };
 
-  if (SignInError) {
-    console.log("SignInError: ", SignInError)
-  }
+
   return (
     <div className="fixed h-screen w-full inset-0 bg-black/50 flex items-center justify-center p-4 z-10">
       <form
@@ -71,11 +71,6 @@ const SignInModal = ({
         {/* Modal content */}
         <div className="p-8">
           <h2 className="text-2xl font-bold text-center mb-6">Sign in</h2>
-          {
-            signInError && (
-              <h3 className="text-red-500 text-sm my-2 text-start">{signInError}</h3>
-            )
-          }
           <div>
             <div className="mb-4">
               <label
@@ -98,6 +93,11 @@ const SignInModal = ({
                     {errors.email.message}
                   </p>
                 )}
+                {
+                  signInError && signInError == "Email not found." && (
+                    <h3 className="text-red-500 text-sm my-2 text-start">{signInError}</h3>
+                  )
+                }
               </div>
             </div>
 
@@ -122,6 +122,11 @@ const SignInModal = ({
                     {errors.password.message}
                   </p>
                 )}
+                {
+                  signInError && signInError == "Password is incorrect." && (
+                    <h3 className="text-red-500 text-sm my-2 text-start">{signInError}</h3>
+                  )
+                }
               </div>
             </div>
 
@@ -129,7 +134,7 @@ const SignInModal = ({
               type="submit"
               className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer"
             >
-              {isSigningIn ? 'Signing in...' : 'Sign in'}
+              {isSigningIn ? <span className="loader"></span> : 'Sign in'}
             </button>
           </div>
 

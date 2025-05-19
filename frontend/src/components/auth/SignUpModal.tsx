@@ -10,12 +10,12 @@ const SignUpModal = ({
   setIsSignUpModalOpen,
   isSignUpModalOpen,
 }: // isSignUpModalOpen,
-{
-  setIsSignInModalOpen: Dispatch<SetStateAction<boolean>>;
-  // isSignInModalOpen: boolean;
-  setIsSignUpModalOpen: Dispatch<SetStateAction<boolean>>;
-  isSignUpModalOpen: boolean;
-}) => {
+  {
+    setIsSignInModalOpen: Dispatch<SetStateAction<boolean>>;
+    // isSignInModalOpen: boolean;
+    setIsSignUpModalOpen: Dispatch<SetStateAction<boolean>>;
+    isSignUpModalOpen: boolean;
+  }) => {
   const {
     register,
     handleSubmit,

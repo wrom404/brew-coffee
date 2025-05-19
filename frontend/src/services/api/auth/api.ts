@@ -51,7 +51,7 @@ export const handleSignOut = async (): Promise<Auth | void> => {
     }
 
     if (error instanceof Error) {
-      throw (error.message)
+      throw (error)
     }
     console.log("An unexpected error occurred.")
   }

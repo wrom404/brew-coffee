@@ -23,21 +23,21 @@ export function DropdownMenuCheckboxes({ isScrolled }: { isScrolled: boolean }) 
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56 bg-gray-50 z-10 pb-3">
+      <DropdownMenuContent className="w-56 bg-gray-50 z-50 border-none pb-3">
         <DropdownMenuLabel>Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
-          className="hover:bg-amber-100 cursor-pointer"
+          className="hover:bg-amber-500 hover:text-white cursor-pointer"
         >
           <UserRound className="mr-2" size={18} /><Link to={"/"}>Profile</Link>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
-          className="hover:bg-amber-100 cursor-pointer"
+          className="hover:bg-amber-500 hover:text-white cursor-pointer"
         >
           <Settings className="mr-2" size={18} /><Link to={"/"}>Settings</Link>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
-          className="hover:bg-amber-100 cursor-pointer"
+          className="hover:bg-amber-500 hover:text-white cursor-pointer"
         >
           <LogOut className="mr-2" size={18} /><Link to={"/logout"}>Logout</Link>
         </DropdownMenuCheckboxItem>
