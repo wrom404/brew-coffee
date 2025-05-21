@@ -1,23 +1,43 @@
-import CardModal from "@/components/ui-components/CardModal";
 import ProductCard from "@/components/ui-components/ProductCard";
-import { coffeeProductsMenu } from "@/constants/products";
-import { CoffeeProduct } from "@/types/types";
-import { useState } from "react";
+// import { coffeeProductsMenu } from "@/constants/products";
+import { useGetAllProducts } from "@/hooks/customer/useGetAllProducts";
+import { Products } from "@/types/types";
+import { useEffect, useState } from "react";
 
 const Menu = () => {
-  const [cart, setCart] = useState<CoffeeProduct[]>([]);
-  const [favorites, setFavorites] = useState<CoffeeProduct[]>([]);
+  const [cart, setCart] = useState<Products[]>([]);
+  const [favorites, setFavorites] = useState<Products[]>([]);
+  const [coffeeProducts, setCoffeeProducts] = useState<Products[]>([])
+  const { data: products, isPending: isFetchingProducts, isError: errorFetching } = useGetAllProducts();
 
-  const handleAddToCart = () => {};
+  useEffect(() => {
+    if (products) {
+      setCoffeeProducts(products)
+    }
+  }, [products])
 
-  const handleAddToFavorites = () => {};
+  console.log("coffeeProducts: ", coffeeProducts) // all the attributes are undefined
+  console.log("products: ", products)
+
+
+  const handleAddToCart = () => { };
+
+  const handleAddToFavorites = () => { };
+
+  if (isFetchingProducts) {
+    <div className="h-screen flex justify-center items-center text-2xl">Loading...</div>
+  }
+
+  if (errorFetching) {
+    console.log("Something went wrong.")
+  }
 
   return (
     <section
       className="min-h-screen flex flex-col items-center py-12 px-4 sm:px-8 md:px-16 bg-[#E9DCC5]"
       id="menu"
     >
-      <h2 className="text-2xl sm:text-3xl md:text-4xl text-gray-800 font-medium text-center mb-4">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl text-gray-800 font-medium text-center mb-4 md:mt-8">
         Our Menu
       </h2>
       <p className="text-base sm:text-lg text-amber-900 leading-7 tracking-wide text-center max-w-3xl mb-12">
@@ -26,13 +46,13 @@ const Menu = () => {
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl px-2">
-        {coffeeProductsMenu.map((coffee) => (
+        {coffeeProducts && coffeeProducts.length > 0 && coffeeProducts.map((coffee) => (
           <ProductCard
             key={coffee.id}
             coffee={coffee}
             onAddToCart={handleAddToCart}
             onAddToFavorites={handleAddToFavorites}
-            isFavorite={favorites.some((f) => f.id === coffee.id)}
+            isFavorite={favorites.some((f) => f.id == coffee.id)}
           />
         ))}
       </div>

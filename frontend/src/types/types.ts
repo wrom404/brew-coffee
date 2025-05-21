@@ -1,9 +1,9 @@
 export type ProductCardType = {
   product: {
     id: number,
-  name: string,
-  price: string,
-  image: string
+    name: string,
+    price: string,
+    image: string
   },
   setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>,
   isModalOpen?: boolean,
@@ -46,4 +46,29 @@ export interface CoffeeProduct {
   description: string;
   price: number;
   imageUrl: string;
+}
+
+export interface Products {
+  id: number;
+  name: string;
+  description: string;
+  price: string; // or number, depending on how you handle currency
+  imageUrl: string;
+  category: string;
+  stockQuantity: number;
+  isAvailable: boolean;
+  createdAt: string; // or Date, if you parse it
+  updatedAt: string; // or Date, if you parse it
+}
+export interface ApiProducts {
+  id: number;
+  name: string;
+  description: string;
+  price: string; // or number, depending on how you handle currency
+  image_url: string;
+  category: string;
+  stock_quantity: number;
+  is_available: boolean;
+  created_at: string; // or Date, if you parse it
+  updated_at: string; // or Date, if you parse it
 }

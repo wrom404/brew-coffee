@@ -3,6 +3,7 @@ import path from "path";
 import dotenv from "dotenv"
 import logger from "./middleware/log/logger";
 import cors from 'cors'
+import cookieParser from "cookie-parser";
 import notFoundRoute from "./middleware/error/notFoundHandler";
 import errorHandler from "./middleware/error/errorHandler";
 import authUserRoutes from "./routes/auth/authRoutes";
@@ -25,8 +26,15 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(logger)
+app.use(cookieParser())
 
-app.use("/uploads", express.static(path.resolve(__dirname, "./uploads/products")));
+/**
+ * Serve product images statically from the 'uploads/products' directory
+ * - Maps HTTP requests to /uploads/products/:filename to physical files
+ * - Example: GET localhost:4000/uploads/products/coffee.jpg serves ./uploads/products/coffee.jpg, this will be use in the frontend img tag to display an image to that file path
+ * - Security: Files are read-only and accessible via exact path matching
+ */
+app.use("/uploads/products", express.static(path.join(__dirname, "uploads", "products")));
 
 // authentication routes
 app.use('/api/auth', authUserRoutes)

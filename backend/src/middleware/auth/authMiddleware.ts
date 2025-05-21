@@ -3,8 +3,10 @@ import jwt from 'jsonwebtoken';
 import { PayloadProps } from "../../types/jwt";
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction): Promise<void> {
-  const token = req.header("Authorization")?.split(" ")[1];
+  // const token = req.header("Authorization")?.split(" ")[1];
+  const token = req.cookies.token;
   console.log("header: ", req.header("Authorization")?.split(" "))
+  console.log("token: ", token)
 
   const JWT_SECRET = process.env.JWT_SECRET;
 

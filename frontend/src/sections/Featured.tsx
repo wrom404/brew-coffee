@@ -5,7 +5,7 @@ const Featured = () => {
   return (
     <section
       id="feature"
-      className="bg-amber-50 py-12 px-6 md:px-20 flex flex-col gap-6"
+      className="bg-amber-50 px-6 md:px-20 flex flex-col items-center justify-center gap-6 min-h-screen"
     >
       <h3 className="text-2xl sm:text-3xl md:text-4xl text-gray-800 font-medium text-center">
         Our best seller coffee

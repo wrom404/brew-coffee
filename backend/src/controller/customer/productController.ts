@@ -11,9 +11,14 @@ export async function getAllProducts(req: Request, res: Response) {
     const result = await db.select().from(products);
     if (handleEmptyResult(result, res, "No products found.", 200, true)) return;
 
-    res.status(200).json({ success: true, products: result })
+    const cleanProducts = result.map((product) => ({
+      ...product,
+      imageUrl: product.imageUrl?.split('/').pop()
+    }))
+
+    res.status(200).json({ success: true, products: cleanProducts })
   } catch (error) {
-    res.status(500).json({ error, message: "Internal server error. " })
+    res.status(500).json({ success: false, error, message: "Internal server error. " })
   }
 }
 
@@ -33,7 +38,6 @@ export async function getProductById(req: Request, res: Response): Promise<void>
     res.status(200).json({ success: true, product: result })
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
-    return;
   }
 }
 

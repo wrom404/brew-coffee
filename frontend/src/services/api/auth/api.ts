@@ -7,6 +7,8 @@ interface Auth {
   error?: string;
 }
 
+axios.defaults.withCredentials = true;
+
 export const handleSignIn = async (userData: SignInSchema): Promise<Auth | void> => {
   try {
     const result = await axios.post(`http://localhost:4000/api/auth/sign-in`, userData);
