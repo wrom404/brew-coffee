@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div
       id="home"
-      className="min-h-screen flex flex-col-reverse md:flex-row justify-center items-center px-6 md:px-20 py-10 gap-10"
+      className="min-h-screen flex flex-col-reverse md:flex-row justify-center items-center px-6 md:px-24 lg:px-32 py-10 gap-10"
     >
       <div className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left">
         <div className="text-gray-100 space-y-6">

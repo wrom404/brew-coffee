@@ -34,7 +34,7 @@ export default function Header() {
     // px-4 md:px-6 lg:px-8
     <div className={`fixed w-full z-50`}>
       <header
-        className={`h-20 w-full shrink-0 items-center px-4 md:px-18 flex justify-between gap-12  ${isScrolled
+        className={`h-20 w-full shrink-0 items-center px-4 md:px-24 lg:px-32 flex justify-between gap-12  ${isScrolled
           ? "bg-white bg-opacity-95 shadow-sm text-[#4E342E]"
           : "bg-transparent py-0"
           }`}
