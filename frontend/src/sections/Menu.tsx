@@ -1,14 +1,20 @@
 import ProductCard from "@/components/ui-components/ProductCard";
-// import { coffeeProductsMenu } from "@/constants/products";
 import { useGetAllProducts } from "@/hooks/customer/useGetAllProducts";
+import AddToCartModal from "@/components/ui-components/AddToCartModal";
+import useUser from "@/store/useUser";
 import { Products } from "@/types/types";
 import { useEffect, useState } from "react";
+import { useGetProductById } from "@/hooks/customer/useGetProductById";
+import { useAddToCart } from "@/hooks/customer/useAddToCart";
 
 const Menu = () => {
-  const [cart, setCart] = useState<Products[]>([]);
-  const [favorites, setFavorites] = useState<Products[]>([]);
   const [coffeeProducts, setCoffeeProducts] = useState<Products[]>([])
-  const { data: products, isPending: isFetchingProducts, isError: errorFetching } = useGetAllProducts();
+  const [cartModal, setCartModal] = useState<boolean>(false);
+  const [coffeeId, setCoffeeId] = useState<number | undefined>();
+  const { data: products, isPending: isFetchingProducts, isError: errorFetchingProducts } = useGetAllProducts();
+  const { data: product, isPending: isFetchingProduct, isError: errorFetchingProduct } = useGetProductById(coffeeId!, { enabled: !!coffeeId, });
+  const { mutate: addToCart, isPending: isAddingToCart, isError: errorAddingToCart } = useAddToCart()
+  const { currentUserId } = useUser();
 
   useEffect(() => {
     if (products) {
@@ -16,15 +22,33 @@ const Menu = () => {
     }
   }, [products])
 
-  const handleAddToCart = () => { };
-
   const handleAddToFavorites = () => { };
 
-  if (isFetchingProducts) {
+  const handleAddToCartModal = (id: number) => {
+    setCartModal(true);
+    setCoffeeId(id)
+  }
+
+  const handleAddToCartProduct = (
+    id: number,
+    quantity: number,
+    selectedSize: string,
+    finalPrice: number
+  ) => {
+    addToCart({
+      currentUserId,
+      productId: id,
+      quantity,
+      selectedSize,
+      finalPrice
+    });
+  }
+
+  if (isFetchingProducts || isFetchingProduct || isAddingToCart) {
     <div className="h-screen flex justify-center items-center text-2xl">Loading...</div>
   }
 
-  if (errorFetching) {
+  if (errorFetchingProducts || errorFetchingProduct || errorAddingToCart) {
     console.log("Something went wrong.")
   }
 
@@ -46,16 +70,23 @@ const Menu = () => {
           <ProductCard
             key={coffee.id}
             coffee={coffee}
-            onAddToCart={handleAddToCart}
             onAddToFavorites={handleAddToFavorites}
-            isFavorite={favorites.some((f) => f.id == coffee.id)}
+            handleAddToCartButton={handleAddToCartModal}
           />
         ))}
       </div>
 
-      <button className="cursor-pointer mt-10 px-6 py-3 rounded-lg bg-amber-600 hover:bg-[#a34b08] text-gray-200 tracking-wide text-sm sm:text-base">
+      <button className="cursor-pointer mt-10 px-6 py-3 rounded-lg bg-amber-600 hover:bg-amber-700 text-gray-200 tracking-wide text-sm sm:text-base">
         Load more
       </button>
+      {cartModal && (
+        <AddToCartModal
+          setCartModal={setCartModal}
+          product={product?.product ? product.product : []}
+          handleAddToCartProduct={handleAddToCartProduct}
+          isLoading={isFetchingProduct}
+        />
+      )}
     </section>
   );
 };

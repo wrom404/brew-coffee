@@ -4,10 +4,10 @@ import { useState } from "react";
 
 const ProductCard: React.FC<{
   coffee: Products;
-  onAddToCart: (coffee: Products) => void;
   onAddToFavorites: (coffee: Products) => void;
+  handleAddToCartButton: (id: number) => void;
   isFavorite?: boolean;
-}> = ({ coffee, onAddToCart, onAddToFavorites, isFavorite = false }) => {
+}> = ({ coffee, onAddToFavorites, handleAddToCartButton, isFavorite = false }) => {
   const [favorite, setFavorite] = useState(isFavorite);
 
   const handleFavoriteToggle = () => {
@@ -20,17 +20,14 @@ const ProductCard: React.FC<{
   const getCleanImageUrl = (url: string) => {
     // Handle cases where URL might already be clean
     if (url.startsWith('product-')) return url;
-
     // Extract filename after last slash or 'products'
-    const filename = url.split(/[\\/]/).pop() ||
-      url.split('products').pop() ||
-      url;
-
+    const filename = url.split(/[\\/]/).pop() || url.split('products').pop() || url;
     // Remove any remaining 'products' prefix if present
     return filename.replace(/^products/, '');
   };
 
   const imageUrl = `http://localhost:4000/uploads/products/${getCleanImageUrl(coffee.imageUrl)}`;
+  console.log("image url: ", imageUrl)
 
   return (
     <div className="bg-amber-50 shadow-md rounded-lg overflow-hidden w-full max-w-xs mx-auto transform transition-all duration-300 hover:shadow-lg">
@@ -38,7 +35,7 @@ const ProductCard: React.FC<{
         <img
           src={imageUrl}
           alt={coffee.name}
-          className="w-full h-full object-cover hover:scale-105 transition-transform ease-in-out"
+          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 cursor-pointer"
           onError={(e) => {
             // Fallback if image fails to load
             (e.target as HTMLImageElement).src = '/placeholder-coffee.jpg';
@@ -74,7 +71,7 @@ const ProductCard: React.FC<{
             ${parseFloat(coffee.price).toFixed(2)}
           </span>
           <button
-            onClick={() => onAddToCart(coffee)}
+            onClick={() => handleAddToCartButton(coffee.id)}
             className="flex items-center gap-1 bg-amber-600 text-white px-3 py-1.5 rounded-full hover:bg-amber-700 transition-colors text-sm cursor-pointer"
           >
             <ShoppingCart className="w-4 h-4" />

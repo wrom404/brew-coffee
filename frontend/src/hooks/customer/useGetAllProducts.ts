@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 
 export const useGetAllProducts = () => {
   return useQuery({
-    queryKey: ['customer-products'],
+    queryKey: ['customerProducts'],
     queryFn: () => getAllProducts(),
   })
 }

@@ -6,16 +6,18 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router"; // if you're using React Router
-import { Coffee, Search, Sun, ShoppingBag } from "lucide-react";
+import { Coffee, Search, Sun, ShoppingBag, Heart } from "lucide-react";
 import SignInModal from "../auth/SignInModal";
 import SignUpModal from "../auth/SignUpModal";
 
 import { DropdownMenuCheckboxes } from "@/components/ui-components/DropdownMenu"
+import useUser from "@/store/useUser";
 
 export default function Header() {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState<boolean>(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const { currentUserId } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,11 +26,14 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  console.log("currentUserId: ", currentUserId)
 
   const iconClass = `cursor-pointer transition ${isScrolled
     ? "text-[#4E342E] hover:text-amber-700"
     : "text-gray-50 hover:text-[var(--quaternary-color)]"
     }`;
+
+  console.log("current id: ", currentUserId)
 
   return (
     // px-4 md:px-6 lg:px-8
@@ -46,7 +51,7 @@ export default function Header() {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
+          <SheetContent side="left" className="bg-white"> {/* Add bg-white here */}
             <div
               className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled ? "text-amber-900" : "text-gray-50"
                 }`}
@@ -96,7 +101,7 @@ export default function Header() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <div className="ml-auto flex items-center gap-4">
+        <div className="ml-auto flex items-center gap-6">
           {/* Search Icon */}
           <Search
             className={`${isScrolled
@@ -109,21 +114,25 @@ export default function Header() {
           {/* Cart Icon */}
           <ShoppingBag size={22} className={iconClass} />
 
+          <Heart size={22} className={iconClass} />
+
           {/* User Profile Icon */}
           <DropdownMenuCheckboxes isScrolled={isScrolled} />
           {/* Toggle Light/Dark Mode */}
           <Sun size={22} className={iconClass} />
 
           {/* Sign in Button */}
-          <button
-            className={`border whitespace-nowrap ${isScrolled
-              ? "text-[#4E342E] border-[#4E342E] hover:text-amber-700 hover:border-amber-700 cursor-pointer"
-              : "text-gray-50 border-gray-300 hover:text-[var(--quaternary-color)] hover:border-[var(--quaternary-color)]"
-              } bg-transparent rounded-md py-1 px-3 cursor-pointer`}
-            onClick={() => setIsSignInModalOpen(true)}
-          >
-            Sign in
-          </button>
+          {
+            currentUserId === 0 && <button
+              className={`border whitespace-nowrap ${isScrolled
+                ? "text-[#4E342E] border-[#4E342E] hover:text-amber-700 hover:border-amber-700 cursor-pointer"
+                : "text-gray-50 border-gray-300 hover:text-[var(--quaternary-color)] hover:border-[var(--quaternary-color)]"
+                } bg-transparent rounded-md py-1 px-3 cursor-pointer`}
+              onClick={() => setIsSignInModalOpen(true)}
+            >
+              Sign in
+            </button>
+          }
         </div>
 
       </header>

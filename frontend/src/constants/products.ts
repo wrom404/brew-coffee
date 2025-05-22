@@ -192,3 +192,12 @@ export const coffeeProductsMenu: CoffeeProduct[] = [
     imageUrl: coffee5
   }
 ];
+
+
+export const sizes = ['S', 'M', 'L', 'XL'];
+export const sizeLabels = {
+  'S': 'Small',
+  'M': 'Medium',
+  'L': 'Large',
+  'XL': 'Extra Large'
+};

@@ -60,15 +60,3 @@ export interface Products {
   createdAt: string; // or Date, if you parse it
   updatedAt: string; // or Date, if you parse it
 }
-export interface ApiProducts {
-  id: number;
-  name: string;
-  description: string;
-  price: string; // or number, depending on how you handle currency
-  image_url: string;
-  category: string;
-  stock_quantity: number;
-  is_available: boolean;
-  created_at: string; // or Date, if you parse it
-  updated_at: string; // or Date, if you parse it
-}

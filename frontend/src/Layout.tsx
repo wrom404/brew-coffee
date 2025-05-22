@@ -9,15 +9,18 @@ const Layout = () => {
   const { currentUserId, setCurrentUserId } = useUser();
 
   useEffect(() => {
-    if (currentUser) {
-      setCurrentUserId(currentUser.currentUser.id)
+    const id = currentUser?.currentUser?.id ?? 0;
+    if (id) {
+      setCurrentUserId(id)
     }
   }, [currentUser, setCurrentUserId])
 
   console.log("currentUser: ", currentUserId)
 
   if (isFetchingUser) {
-    <h1>Loading...</h1>
+    return <div className="h-screen flex justify-center items-center">
+      <span className="loader"></span>
+    </div>
   }
 
   if (fetchError) {

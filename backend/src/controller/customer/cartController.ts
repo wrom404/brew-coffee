@@ -8,7 +8,7 @@ import validateRequiredFields from "../../utils/validateRequiredFields";
 
 export async function addToCart(req: Request, res: Response) {
   const { customerId } = req.params;
-  const { productId, quantity, size } = req.body;
+  const { productId, quantity, size, price } = req.body;
 
   if (validateRequiredFields(res, [customerId, productId, quantity, size])) return; // Stop execution if required fields are empty
 
@@ -16,14 +16,15 @@ export async function addToCart(req: Request, res: Response) {
   if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
-    const resultQueryProduct = await db.select().from(products).where(eq(products.id, productId));
-    if (handleEmptyResult(resultQueryProduct, res, "No product found.")) return;
+    // const resultQueryProduct = await db.select().from(products).where(eq(products.id, productId));
+    // if (handleEmptyResult(resultQueryProduct, res, "No product found.")) return;
 
-    const totalAmount = resultQueryProduct.reduce((total: number, item) => {
-      return total + (Number(item.price) * quantity)
-    }, 0);
+    // const totalAmount = resultQueryProduct.reduce((total: number, item) => {
+    //   return total + (Number(item.price) * quantity)
+    // }, 0);
+    // const totalAmount = Number(price) * quantity
 
-    const fixedAmount = totalAmount.toFixed(2);
+    const fixedAmount = price.toFixed(2);
 
     const result = await db.insert(cartItems).values({ userId: parsedId, productId, quantity, size, amount: fixedAmount }).returning();;
     if (handleEmptyResult(result, res, "Failed to add product to cart.")) return;
