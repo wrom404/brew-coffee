@@ -18,6 +18,8 @@ import customerProfileRoutes from "./routes/customer/profileRoutes"
 import customerOrderRoutes from "./routes/customer/orderRoutes"
 import customerFavoriteRoutes from "./routes/customer/favoriteRoutes";
 
+import userRoutes from "./routes/user/userRoute";
+
 dotenv.config()
 const app: Express = express();
 const PORT = process.env.PORT || 4000;
@@ -50,6 +52,9 @@ app.use('/api/customer/favorite', customerFavoriteRoutes)
 app.use('/api/admin/product', adminProductRoutes)
 app.use('/api/admin/customer', adminCustomerRoutes)
 app.use('/api/admin/order', adminOrderRoutes)
+
+// users
+app.use('/api/user', userRoutes)
 
 // 404 "not found" routes
 app.use(notFoundRoute)

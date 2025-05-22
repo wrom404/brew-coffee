@@ -16,10 +16,6 @@ const Menu = () => {
     }
   }, [products])
 
-  console.log("coffeeProducts: ", coffeeProducts) // all the attributes are undefined
-  console.log("products: ", products)
-
-
   const handleAddToCart = () => { };
 
   const handleAddToFavorites = () => { };
@@ -57,7 +53,7 @@ const Menu = () => {
         ))}
       </div>
 
-      <button className="mt-10 px-6 py-3 rounded-lg bg-[--fifth-color] hover:bg-[#a34b08] text-gray-200 tracking-wide text-sm sm:text-base">
+      <button className="cursor-pointer mt-10 px-6 py-3 rounded-lg bg-amber-600 hover:bg-[#a34b08] text-gray-200 tracking-wide text-sm sm:text-base">
         Load more
       </button>
     </section>

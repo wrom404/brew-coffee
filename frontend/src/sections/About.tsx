@@ -13,7 +13,7 @@ export const About = () => {
           <motion.img
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 2 }}
+            transition={{ duration: .3 }}
             viewport={{ amount: 0.4, once: true }}
             className="rounded-tr-4xl rounded-bl-4xl hover:scale-105 transition-transform w-full h-auto"
             src={coffee12}
@@ -27,18 +27,18 @@ export const About = () => {
         <motion.h3
           initial={{ opacity: 0, x: 10 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 2 }}
+          transition={{ duration: .3, delay: .1 }}
           viewport={{ amount: 0.4, once: true }}
           className="text-3xl md:text-4xl font-medium my-4 text-gray-800 text-center lg:text-left"
         >
           About Us
         </motion.h3>
-        
+
         <div className="w-full">
           <motion.p
             initial={{ opacity: 0, x: 10 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 2, delay: 0.1 }}
+            transition={{ duration: .3, delay: 0.2 }}
             viewport={{ amount: 0.4, once: true }}
             className="text-base md:text-lg tracking-wide leading-7 md:leading-8 text-amber-900 text-center lg:text-left"
           >
@@ -51,13 +51,13 @@ export const About = () => {
             Order now and get your coffee.
           </motion.p>
         </div>
-        
+
         <motion.button
           initial={{ opacity: 0, x: 10 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 2, delay: 0.2 }}
+          transition={{ duration: .3, delay: 0.3 }}
           viewport={{ amount: 0.4, once: true }}
-          className="bg-[--fifth-color] py-3 px-5 rounded-2xl font-extralight my-4 hover:bg-[#a34b08] cursor-pointer text-gray-100"
+          className="bg-[--fifth-color] py-3 px-5 rounded-2xl font-extra-light my-4 hover:bg-[#a34b08] cursor-pointer text-gray-100"
         >
           Learn more
         </motion.button>
