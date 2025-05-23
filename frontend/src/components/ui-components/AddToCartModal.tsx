@@ -132,14 +132,14 @@ const AddToCartModal = ({
                 <div className="flex items-center border border-gray-300 rounded-lg">
                   <button
                     onClick={decrementQuantity}
-                    className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg"
+                    className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg cursor-pointer"
                   >
                     <Minus size={16} />
                   </button>
                   <span className="px-4 py-2 min-w-12 text-center font-medium">{quantity}</span>
                   <button
                     onClick={incrementQuantity}
-                    className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg"
+                    className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg cursor-pointer"
                   >
                     <Plus size={16} />
                   </button>
@@ -157,7 +157,7 @@ const AddToCartModal = ({
               disabled={!selectedSize || !isAvailable || isAddedToCart}
               className={`
                 w-full py-3 px-4 rounded-lg font-medium transition-all duration-300
-                focus:outline-none focus:ring-2 focus:ring-offset-2
+                focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer
                 ${isAddedToCart
                   ? 'bg-emerald-600 text-white focus:ring-emerald-500'
                   : !selectedSize || !isAvailable

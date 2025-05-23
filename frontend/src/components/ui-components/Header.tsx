@@ -5,7 +5,7 @@ import {
   NavigationMenu,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Link } from "react-router"; // if you're using React Router
+import { Link, useNavigate } from "react-router"; // if you're using React Router
 import { Coffee, Search, Sun, ShoppingBag, Heart } from "lucide-react";
 import SignInModal from "../auth/SignInModal";
 import SignUpModal from "../auth/SignUpModal";
@@ -18,6 +18,7 @@ export default function Header() {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { currentUserId } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,7 +27,6 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  console.log("currentUserId: ", currentUserId)
 
   const iconClass = `cursor-pointer transition ${isScrolled
     ? "text-[#4E342E] hover:text-amber-700"
@@ -112,7 +112,7 @@ export default function Header() {
           />
 
           {/* Cart Icon */}
-          <ShoppingBag size={22} className={iconClass} />
+          <ShoppingBag onClick={() => navigate(`/cart/${currentUserId}`)} size={22} className={iconClass} />
 
           <Heart size={22} className={iconClass} />
 

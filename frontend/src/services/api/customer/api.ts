@@ -107,3 +107,25 @@ export const addToCart = async (
     throw new Error('An unknown error occurred while adding to cart');
   }
 };
+
+export const getAllCartItems = async (userId: number) => {
+  try {
+    const result = await axios.get(`http://localhost:4000/api/customer/cart/${userId}`);
+
+    if (!result.data.success) {
+      throw new Error(result.data.message);
+    }
+
+    return result.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message)
+    }
+
+    if (error instanceof Error) {
+      throw error;
+    }
+
+    console.log("An unexpected error occurred.")
+  }
+}
