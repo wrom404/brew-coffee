@@ -1,4 +1,4 @@
-import { Products } from "@/types/types";
+import { CartItem, Products } from "@/types/types";
 import axios from "axios"
 
 interface AddToCartResponse {
@@ -23,6 +23,7 @@ interface AddToCartParams {
   size: string;
   price: number;
 }
+
 
 // Products
 export const getAllProducts = async (): Promise<Products[] | void> => {
@@ -108,7 +109,7 @@ export const addToCart = async (
   }
 };
 
-export const getAllCartItems = async (userId: number) => {
+export const getAllCartItems = async (userId: number): Promise<CartItem | void> => {
   try {
     const result = await axios.get(`http://localhost:4000/api/customer/cart/${userId}`);
 

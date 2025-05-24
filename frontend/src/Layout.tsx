@@ -8,6 +8,7 @@ const Layout = () => {
   const { data: currentUser, isPending: isFetchingUser, isError: fetchError } = useGetCurrentUser()
   const { currentUserId, setCurrentUserId } = useUser();
 
+
   useEffect(() => {
     const id = currentUser?.currentUser?.id ?? 0;
     if (id) {

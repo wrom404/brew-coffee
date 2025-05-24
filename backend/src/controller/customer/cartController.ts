@@ -46,7 +46,38 @@ export async function getAllProductCart(req: Request, res: Response) {
   if (isNotANumber(parsedId, res)) return; // Stop execution if invalid
 
   try {
-    const result = await db.select().from(cartItems).where(eq(cartItems.userId, parsedId))
+
+    //     SELECT
+    //     cart_items.id,
+    //       cart_items.user_id,
+    //       cart_items.product_id,
+    //       cart_items.quantity,
+    //       cart_items.size,
+    //       cart_items.amount,
+    //       products.name,
+    //       products.image_url,
+    //       products.price
+    //     FROM
+    //      cart_items
+    //     INNER JOIN
+    //      products
+    //     ON
+    //      cart_items.product_id = products.id;
+    // the drizzle query below is equivalent to the raw sql query above
+    const result = await db
+      .select({
+        id: cartItems.id,
+        userId: cartItems.userId,
+        productId: cartItems.productId,
+        quantity: cartItems.quantity,
+        size: cartItems.size,
+        amount: cartItems.amount,
+        productName: products.name,
+        productImage: products.imageUrl,
+        productPrice: products.price,
+      })
+      .from(cartItems)
+      .innerJoin(products, eq(cartItems.productId, products.id));
 
     if (handleEmptyResult(result, res, "Cart is empty.", 200, true)) return;
 

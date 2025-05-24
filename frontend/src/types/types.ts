@@ -60,3 +60,31 @@ export interface Products {
   createdAt: string; // or Date, if you parse it
   updatedAt: string; // or Date, if you parse it
 }
+
+export interface CartItem {
+  success?: boolean;
+  cartProduct: [{
+    id: number;
+    amount: string;
+    productId: number;
+    productImage: string;
+    productName: string;
+    productPrice: string;
+    quantity: number;
+    size: string;
+    userId: number;
+  }]
+}
+
+export interface cartProduct {
+  id: number;
+  amount: string;
+  productId: number;
+  productImage: string;
+  productName: string;
+  productPrice: string;
+  quantity: number;
+  size: string;
+  userId: number;
+  selected?: boolean;
+}

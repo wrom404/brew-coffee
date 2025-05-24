@@ -28,19 +28,17 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const iconClass = `cursor-pointer transition ${isScrolled
+  const iconClass = `cursor-pointer transition ${isScrolled || window.location.pathname.startsWith('/cart/')
     ? "text-[#4E342E] hover:text-amber-700"
     : "text-gray-50 hover:text-[var(--quaternary-color)]"
     }`;
-
-  console.log("current id: ", currentUserId)
 
   return (
     // px-4 md:px-6 lg:px-8
     <div className={`fixed w-full z-50`}>
       <header
-        className={`h-20 w-full shrink-0 items-center px-4 md:px-24 lg:px-32 flex justify-between gap-12  ${isScrolled
-          ? "bg-white bg-opacity-95 shadow-sm text-[#4E342E]"
+        className={`h-20 w-full shrink-0 items-center px-4 md:px-24 lg:px-32 flex justify-between gap-12 ${isScrolled || window.location.pathname.startsWith('/cart/')
+          ? "bg-white bg-opacity-95 shadow-sm !text-[#4E342E]" // Added !important flag
           : "bg-transparent py-0"
           }`}
       >
@@ -53,7 +51,8 @@ export default function Header() {
           </SheetTrigger>
           <SheetContent side="left" className="bg-white"> {/* Add bg-white here */}
             <div
-              className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled ? "text-amber-900" : "text-gray-50"
+              onClick={() => navigate("/")}
+              className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled || window.location.pathname.startsWith('/cart/') ? "text-amber-900" : "text-gray-50"
                 }`}
             >
               <Coffee className="" /> brew.kofe'
@@ -78,7 +77,8 @@ export default function Header() {
 
         <Link to="#" className="mr-6 hidden lg:flex items-center gap-2">
           <div
-            className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled ? "text-amber-900" : "text-gray-50"
+            onClick={() => navigate("/")}
+            className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled || window.location.pathname.startsWith('/cart/') ? "text-amber-900" : "text-gray-50"
               }`}
           >
             <Coffee className="" /> brew.kofe'
@@ -91,7 +91,7 @@ export default function Header() {
               <li key={label}>
                 <a
                   href={`#${label.toLowerCase().replace(" ", "")}`}
-                  className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${isScrolled ? "text-amber-900" : "text-gray-50"
+                  className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${isScrolled || window.location.pathname.startsWith('/cart/') ? "text-amber-900" : "text-gray-50"
                     }`}
                 >
                   {label}
@@ -104,7 +104,7 @@ export default function Header() {
         <div className="ml-auto flex items-center gap-6">
           {/* Search Icon */}
           <Search
-            className={`${isScrolled
+            className={`${isScrolled || window.location.pathname.startsWith('/cart/')
               ? "text-[#4E342E] hover:text-amber-700"
               : "text-gray-50  hover:text-[var(--quaternary-color)]"
               } cursor-pointer transition`}
@@ -124,7 +124,7 @@ export default function Header() {
           {/* Sign in Button */}
           {
             currentUserId === 0 && <button
-              className={`border whitespace-nowrap ${isScrolled
+              className={`border whitespace-nowrap ${isScrolled || window.location.pathname.startsWith('/cart/')
                 ? "text-[#4E342E] border-[#4E342E] hover:text-amber-700 hover:border-amber-700 cursor-pointer"
                 : "text-gray-50 border-gray-300 hover:text-[var(--quaternary-color)] hover:border-[var(--quaternary-color)]"
                 } bg-transparent rounded-md py-1 px-3 cursor-pointer`}
