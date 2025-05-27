@@ -88,3 +88,32 @@ export interface cartProduct {
   userId: number;
   selected?: boolean;
 }
+
+
+export interface OrderItem {
+  orderId: number;
+  productId: number;
+  quantity: number;
+  price: string;
+  size: string;
+  productName: string;
+  productImage: string;
+}
+
+export interface Order {
+  id: number;
+  userId: number;
+  totalAmount: string;
+  status: "Pending" | "Processing" | "Completed" | "Cancelled"; // adjust as needed
+  paymentMethod: string;
+  payment: string | null;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+  items: OrderItem[];
+}
+
+export interface OrdersResponse {
+  success: boolean;
+  orders: Order[];
+}

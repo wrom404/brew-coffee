@@ -16,7 +16,7 @@ export function DropdownMenuCheckboxes({ isScrolled }: { isScrolled: boolean }) 
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className={`bg-transparent shadow-none border-none outline-none focus:outline-none focus:ring-0 active:outline-none active:ring-0 transition-transform ease-in-out h-fit cursor-pointer mx-0 text-2xl ${isScrolled || window.location.pathname.startsWith('/cart/') ? 'hover:text-amber-700' : 'hover:text-[#d7b899] text-gray-50'
+          className={`bg-transparent shadow-none border-none outline-none focus:outline-none focus:ring-0 active:outline-none active:ring-0 transition-transform ease-in-out h-fit cursor-pointer mx-0 text-2xl ${isScrolled || window.location.pathname.startsWith('/cart/') || window.location.pathname.startsWith('/order/') ? 'hover:text-amber-700' : 'hover:text-[#d7b899] text-gray-50'
             }`}
         >
           <UserRound size={22} />

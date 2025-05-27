@@ -1,4 +1,4 @@
-import { CartItem, Products } from "@/types/types";
+import { CartItem, OrdersResponse, Products } from "@/types/types";
 import axios from "axios"
 
 interface AddToCartResponse {
@@ -154,6 +154,35 @@ export const placeOrderProduct = async (userId: number, cartProductId: number[],
 
     if (!result.data.success) {
       throw new Error(result.data?.message || 'Order placement failed.');
+    }
+
+    console.log(result.data)
+
+    return result.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message)
+    }
+
+    if (error instanceof Error) {
+      throw error;
+    }
+
+    throw new Error("An unexpected error occurred.");
+  }
+}
+
+export const getActiveOrder = async (userId: number): Promise<OrdersResponse | void> => {
+  if (!userId) {
+    throw new Error("Required fields must filled out.")
+  }
+
+  try {
+    const result = await axios.get(`http://localhost:4000/api/customer/order/${userId}`);
+    console.log(result)
+
+    if (!result.data.success) {
+      throw new Error(result.data.message);
     }
 
     console.log(result.data)
