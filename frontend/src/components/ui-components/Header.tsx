@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { Link, useNavigate } from "react-router"; // if you're using React Router
-import { Coffee, Search, Sun, ShoppingBag, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+// import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+// import { Button } from "@/components/ui/button";
+// import {
+//   NavigationMenu,
+// } from "@/components/ui/navigation-menu";
+import { useNavigate } from "react-router"; // if you're using React Router
+import { Coffee, Search, Sun, ShoppingBag, Heart, Settings, ClipboardList } from "lucide-react";
 import SignInModal from "../auth/SignInModal";
 import SignUpModal from "../auth/SignUpModal";
 
@@ -42,40 +41,7 @@ export default function Header() {
           : "bg-transparent py-0"
           }`}
       >
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden">
-              <MenuIcon className="h-6 w-6" />
-              <span className="sr-only">Toggle navigation menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="bg-white"> {/* Add bg-white here */}
-            <div
-              onClick={() => navigate("/")}
-              className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled || window.location.pathname.startsWith('/cart/') ? "text-amber-900" : "text-gray-50"
-                }`}
-            >
-              <Coffee className="" /> brew.kofe'
-            </div>
-            <div className="grid gap-2">
-              {["Home", "Feature", "About Us", "Menu", "Contact"].map(
-                (label) => (
-                  <li key={label}>
-                    <a
-                      href={`#${label.toLowerCase().replace(" ", "")}`}
-                      className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${isScrolled ? "text-amber-900" : "text-gray-50"
-                        }`}
-                    >
-                      {label}
-                    </a>
-                  </li>
-                )
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
-
-        <Link to="#" className="mr-6 hidden lg:flex items-center gap-2">
+        <a href="/" className="mr-6 hidden lg:flex items-center gap-2">
           <div
             onClick={() => navigate("/")}
             className={`text-lg font-medium hover:opacity-80 transition cursor-pointer flex gap-2 ${isScrolled || window.location.pathname.startsWith('/cart/') ? "text-amber-900" : "text-gray-50"
@@ -83,24 +49,7 @@ export default function Header() {
           >
             <Coffee className="" /> brew.kofe'
           </div>
-        </Link>
-
-        <NavigationMenu className="hidden lg:flex">
-          <NavigationMenuList className="space-x-3">
-            {["Home", "Feature", "About Us", "Menu", "Contact"].map((label) => (
-              <li key={label}>
-                <a
-                  href={`#${label.toLowerCase().replace(" ", "")}`}
-                  className={`relative after:absolute after:w-full after:h-0.5 after:bg-[var(--quaternary-color)] after:bottom-0 after:left-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left ${isScrolled || window.location.pathname.startsWith('/cart/') ? "text-amber-900" : "text-gray-50"
-                    }`}
-                >
-                  {label}
-                </a>
-              </li>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-
+        </a>
         <div className="ml-auto flex items-center gap-6">
           {/* Search Icon */}
           <Search
@@ -114,12 +63,16 @@ export default function Header() {
           {/* Cart Icon */}
           <ShoppingBag onClick={() => navigate(`/cart/${currentUserId}`)} size={22} className={iconClass} />
 
+          <ClipboardList onClick={() => { }} size={22} className={iconClass} />
+
           <Heart size={22} className={iconClass} />
 
           {/* User Profile Icon */}
           <DropdownMenuCheckboxes isScrolled={isScrolled} />
           {/* Toggle Light/Dark Mode */}
           <Sun size={22} className={iconClass} />
+
+          <Settings size={22} className={iconClass} />
 
           {/* Sign in Button */}
           {
@@ -152,27 +105,5 @@ export default function Header() {
         />
       )}
     </div>
-  );
-}
-
-// Menu Icon SVG Component
-function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
   );
 }

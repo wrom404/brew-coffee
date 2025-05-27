@@ -10,7 +10,7 @@ export async function placeOrderProduct(req: Request, res: Response) {
   const { customerId } = req.params;
   const { selectedCartProductIds, paymentMethod, message } = req.body;
 
-  if (validateRequiredFields(res, [customerId, selectedCartProductIds, paymentMethod, message])) return;
+  if (validateRequiredFields(res, [customerId, selectedCartProductIds, paymentMethod])) return;
 
   const parsedId = Number(customerId);
   if (isNotANumber(parsedId, res)) return;
@@ -23,6 +23,8 @@ export async function placeOrderProduct(req: Request, res: Response) {
     res.status(400).json({ success: false, message: "Cart product ID must be numbers." });
     return;
   }
+
+  console.log("data: ", selectedCartProductIds, paymentMethod, message)
 
   try {
     let newOrderId: number | null = null;
@@ -101,6 +103,7 @@ export async function placeOrderProduct(req: Request, res: Response) {
     }
 
     // 6. Respond success
+    console.log("orderedProducts: ", orderedProducts)
     res.status(201).json({ success: true, message: "Order placed successfully.", orderId: newOrderId, orderedProducts });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error", error })
