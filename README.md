@@ -15,3 +15,5 @@ Backend (API & Database)
 🔹 Order history tracking for customers
 🔹 Responsive design for an optimized experience on all devices
 This project aims to deliver a smooth and intuitive online ordering experience for coffee lovers. 🚀☕
+
+--- This project is a work in progress ---
